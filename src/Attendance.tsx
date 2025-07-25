@@ -120,7 +120,12 @@ export default function Attendance(): JSX.Element {
     setSummary({ workedDays, vacationDays });
   }, [vacations, activeDates, activeSet]);
 
-  // Render
+  // Helper for d.m. format
+  const formatDM = (date: Date) => `${date.getDate()}.${date.getMonth() + 1}.`;
+
+  // --------------------
+  //  Render
+  // --------------------
   return (
     <>
       <style>{styles}</style>
@@ -159,7 +164,11 @@ export default function Attendance(): JSX.Element {
           <button
             className={`${anotherMonthButtonClass} mr-2`}
             onClick={() =>
-              setCurrentDate((cd) => new Date(cd.setMonth(cd.getMonth() - 1)))
+              setCurrentDate((cd) => {
+                const d = new Date(cd); // clone to avoid mutation
+                d.setMonth(d.getMonth() - 1);
+                return d;
+              })
             }
           >
             « Predchádzajúci mesiac
@@ -167,7 +176,11 @@ export default function Attendance(): JSX.Element {
           <button
             className={`${anotherMonthButtonClass} mr-2`}
             onClick={() =>
-              setCurrentDate((cd) => new Date(cd.setMonth(cd.getMonth() + 1)))
+              setCurrentDate((cd) => {
+                const d = new Date(cd); // clone to avoid mutation
+                d.setMonth(d.getMonth() + 1);
+                return d;
+              })
             }
           >
             Nasledujúci mesiac »
@@ -210,17 +223,17 @@ export default function Attendance(): JSX.Element {
                 2,
                 '0'
               )}`;
-              // FIX: use the exact day (no -1) so weekday matches ISO date
               const dt = new Date(year, month, d);
               const wd = dt.getDay();
               const isHoliday = HOLIDAYS_2025.includes(iso);
               const isWeekend = wd === 0 || wd === 6;
+              const dateDM = formatDM(dt);
 
               if (isWeekend)
                 return (
                   <tr key={iso} className="weekend">
                     <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                    <td>{iso}</td>
+                    <td>{dateDM}</td>
                     <td colSpan={5}></td>
                   </tr>
                 );
@@ -229,7 +242,7 @@ export default function Attendance(): JSX.Element {
                 return (
                   <tr key={iso} className="day-name">
                     <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                    <td>{iso}</td>
+                    <td>{dateDM}</td>
                     <td></td>
                     <td colSpan={4}>Štátny sviatok</td>
                   </tr>
@@ -242,7 +255,7 @@ export default function Attendance(): JSX.Element {
               return (
                 <tr key={iso}>
                   <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                  <td>{iso}</td>
+                  <td>{dateDM}</td>
                   <td className="vacation">
                     <input
                       type="checkbox"
