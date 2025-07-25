@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <title>Pracovná dochádzka</title>
+  <style>
+    body { font-family: sans-serif; padding: 20px; }
+    h1 { text-align: center; }
+    .controls { text-align: center; margin-bottom: 10px; }
+    .user-info { margin-bottom: 10px; }
+    .period { margin-bottom: 20px; }
+    .period label { font-weight: normal; margin-right: 5px; }
+    .period span { font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
+    th { background: #f0f0f0; }
+    .day-name, .weekend { background: #ffff99; }
+    #summary { margin-top: 20px; font-weight: bold; text-align: right; }
+    input[type="time"] { width: 70px; }
+    @media print { .controls, .shift-toggle { display: none !important; } }
+  </style>
+</head>
+<body>
+  <h1>Dochádzka</h1>
+  <div class="user-info">
+    <label>Meno a priezvisko:</label>
+    <input type="text" id="firstName" placeholder="krstné meno">
+    <input type="text" id="lastName" placeholder="priezvisko">
+    <span id="printName"></span>
+  </div>
+  <div class="period">
+    <label>Obdobie:</label><span id="periodDisplay"></span>
+  </div>
+  <div class="controls">
+    <button id="prev">« Predchádzajúci mesiac</button>
+    <span id="monthLabel"></span>
+    <button id="next">Nasledujúci mesiac »</button>
+    <span class="shift-toggle">
+      <label><input type="radio" name="shiftToggle" value="regular" checked> Štandardný</label>
+      <label><input type="radio" name="shiftToggle" value="shortened"> Skrátený</label>
+    </span>
+  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>Deň v týždni</th>
+        <th>Dátum</th>
+        <th>Príchod</th>
+        <th>Odchod</th>
+        <th>Obed Odchod</th>
+        <th>Obed Príchod</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+  <div id="summary"></div>
+<script>
+const holidays2025 = new Set([
+  '2025-01-01','2025-01-06','2025-04-18','2025-04-21',
+  '2025-05-01','2025-05-08','2025-07-05','2025-08-29',
+  '2025-09-01','2025-09-15','2025-11-01','2025-11-17',
+  '2025-12-24','2025-12-25','2025-12-26'
+]);
+
+// Helper to format YYYY-MM-DD locally
+function toLocalISO(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth()+1).padStart(2,'0');
+  const d = String(date.getDate()).padStart(2,'0');
+  return `${y}-${m}-${d}`;
+}
+let currentYear = new Date().getFullYear(), currentMonth = new Date().getMonth();
+let shiftType = 'regular';
+const fName = document.getElementById('firstName'), lName = document.getElementById('lastName'), pName = document.getElementById('printName');
+const monthLabel = document.getElementById('monthLabel'), periodDisplay = document.getElementById('periodDisplay');
+const tbody = document.getElementById('tableBody'), summaryDiv = document.getElementById('summary');
+
+// Name update
+fName.addEventListener('input', () => { pName.textContent = fName.value + ' ' + lName.value; });
+lName.addEventListener('input', () => { pName.textContent = fName.value + ' ' + lName.value; });
+
+// Shift toggle
+document.getElementsByName('shiftToggle').forEach(radio => {
+  radio.addEventListener('change', e => { shiftType = e.target.value; render(); });
+});
+
+// Month navigation
+document.getElementById('prev').addEventListener('click', () => {
+  currentMonth--;
+  if (currentMonth < 0) { currentMonth = 11; currentYear--; }
+  render();
+});
+document.getElementById('next').addEventListener('click', () => {
+  currentMonth++;
+  if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+  render();
+});
+
+function render() {
+  pName.textContent = fName.value + ' ' + lName.value;
+  const header = new Date(currentYear, currentMonth).toLocaleDateString('sk-SK',{month:'long',year:'numeric'});
+  monthLabel.textContent = header;
+  periodDisplay.textContent = header;
+  tbody.innerHTML = '';
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
+
+  // Determine work days
+  let workDates = [];
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(currentYear, currentMonth, d);
+    const wd = dt.getDay();
+    const iso = toLocalISO(dt);
+    if (wd>=1&&wd<=5 && !holidays2025.has(iso)) workDates.push(d);
+  }
+  const activeDays = shiftType==='shortened' ? workDates.slice(0,8) : workDates;
+  const activeSet = new Set(activeDays);
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const dt = new Date(currentYear, currentMonth, d);
+    const wd = dt.getDay();
+    const iso = toLocalISO(dt);
+    const tr = document.createElement('tr'); if(wd===0||wd===6) tr.classList.add('weekend');
+    const tdDay = document.createElement('td'); tdDay.textContent = dt.toLocaleDateString('sk-SK',{weekday:'long'}); tdDay.classList.add('day-name'); tr.appendChild(tdDay);
+    const tdDate = document.createElement('td'); tdDate.textContent = dt.toLocaleDateString('sk-SK'); tr.appendChild(tdDate);
+    if(holidays2025.has(iso)){
+      const tdHol = document.createElement('td'); tdHol.colSpan=4; tdHol.textContent='Štátny sviatok'; tr.appendChild(tdHol);
+    } else  if(isWeekend (iso)) {
+        const weekend = document.createElement('td'); tdHol.colSpan=4; tdHol.textContent=''; tr.appendChild(weekend);
+
+    } else {
+      const isActive = activeSet.has(d);
+      const tdArr = document.createElement('td'); const inArr = document.createElement('input'); inArr.type='time'; inArr.value=isActive?'07:00':''; tdArr.appendChild(inArr); tr.appendChild(tdArr);
+      const tdDep = document.createElement('td'); const inDep = document.createElement('input'); inDep.type='time'; if(isActive) inDep.value=shiftType==='regular'?'15:40':'12:00'; tdDep.appendChild(inDep); tr.appendChild(tdDep);
+      const tdLo = document.createElement('td'); tdLo.textContent=shiftType==='regular'?'12:00':''; tr.appendChild(tdLo);
+      const tdLi = document.createElement('td'); tdLi.textContent=shiftType==='regular'?'12:40':''; tr.appendChild(tdLi);
+    }
+    tbody.appendChild(tr);
+  }
+  updateSummary();
+}
+
+function isWeekend(wd) {
+    return (wd === 0 || wd===6)
+}
+
+function updateSummary() {
+  let totalMinutes = 0;
+  tbody.querySelectorAll('tr').forEach(tr => {
+    const inputs = tr.querySelectorAll('input[type=time]');
+    if(inputs.length===2){
+      const [arr,dep]=inputs;
+      if(arr.value&&dep.value){
+        const [h1,m1]=arr.value.split(':').map(Number);
+        const [h2,m2]=dep.value.split(':').map(Number);
+        const lunchBreak = shiftType==='regular'?40:0;
+        const diff=(h2*60+m2)-(h1*60+m1)-lunchBreak;
+        if(diff>0) totalMinutes+=diff;
+      }
+    }
+  });
+  const hours=Math.floor(totalMinutes/60);
+  const minutes=totalMinutes%60;
+  summaryDiv.textContent = `Odpracované hodiny: ${hours}h ${minutes}m`;
+}
+
+render();
+</script>
+</body>
+</html>
