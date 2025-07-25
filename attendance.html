@@ -69,6 +69,7 @@ function toLocalISO(date) {
   const d = String(date.getDate()).padStart(2,'0');
   return `${y}-${m}-${d}`;
 }
+
 let currentYear = new Date().getFullYear(), currentMonth = new Date().getMonth();
 let shiftType = 'regular';
 const fName = document.getElementById('firstName'), lName = document.getElementById('lastName'), pName = document.getElementById('printName');
@@ -102,64 +103,68 @@ function render() {
   monthLabel.textContent = header;
   periodDisplay.textContent = header;
   tbody.innerHTML = '';
-  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
 
-  // Determine work days
+  const daysInMonth = new Date(currentYear, currentMonth+1, 0).getDate();
   let workDates = [];
   for (let d = 1; d <= daysInMonth; d++) {
     const dt = new Date(currentYear, currentMonth, d);
     const wd = dt.getDay();
     const iso = toLocalISO(dt);
-    if (wd>=1&&wd<=5 && !holidays2025.has(iso)) workDates.push(d);
+    if (wd >= 1 && wd <= 5 && !holidays2025.has(iso)) workDates.push(d);
   }
-  const activeDays = shiftType==='shortened' ? workDates.slice(0,8) : workDates;
+
+  const activeDays = shiftType === 'shortened' ? workDates.slice(0,8) : workDates;
   const activeSet = new Set(activeDays);
 
   for (let d = 1; d <= daysInMonth; d++) {
     const dt = new Date(currentYear, currentMonth, d);
     const wd = dt.getDay();
     const iso = toLocalISO(dt);
-    const tr = document.createElement('tr'); if(wd===0||wd===6) tr.classList.add('weekend');
+    const tr = document.createElement('tr'); if (wd === 0 || wd === 6) tr.classList.add('weekend');
+
     const tdDay = document.createElement('td'); tdDay.textContent = dt.toLocaleDateString('sk-SK',{weekday:'long'}); tdDay.classList.add('day-name'); tr.appendChild(tdDay);
     const tdDate = document.createElement('td'); tdDate.textContent = dt.toLocaleDateString('sk-SK'); tr.appendChild(tdDate);
-    if(holidays2025.has(iso)){
-      const tdHol = document.createElement('td'); tdHol.colSpan=4; tdHol.textContent='Štátny sviatok'; tr.appendChild(tdHol);
-    } else  if(isWeekend (iso)) {
-        const weekend = document.createElement('td'); tdHol.colSpan=4; tdHol.textContent=''; tr.appendChild(weekend);
 
+    if (holidays2025.has(iso)) {
+      const tdHol = document.createElement('td'); tdHol.colSpan = 4; tdHol.textContent = 'Štátny sviatok'; tr.appendChild(tdHol);
     } else {
       const isActive = activeSet.has(d);
-      const tdArr = document.createElement('td'); const inArr = document.createElement('input'); inArr.type='time'; inArr.value=isActive?'07:00':''; tdArr.appendChild(inArr); tr.appendChild(tdArr);
-      const tdDep = document.createElement('td'); const inDep = document.createElement('input'); inDep.type='time'; if(isActive) inDep.value=shiftType==='regular'?'15:40':'12:00'; tdDep.appendChild(inDep); tr.appendChild(tdDep);
-      const tdLo = document.createElement('td'); tdLo.textContent=shiftType==='regular'?'12:00':''; tr.appendChild(tdLo);
-      const tdLi = document.createElement('td'); tdLi.textContent=shiftType==='regular'?'12:40':''; tr.appendChild(tdLi);
+      const tdArr = document.createElement('td');
+      const inArr = document.createElement('input'); inArr.type = 'time'; inArr.value = isActive ? '07:00' : '';
+      inArr.addEventListener('change', updateSummary);
+      tdArr.appendChild(inArr); tr.appendChild(tdArr);
+      const tdDep = document.createElement('td');
+      const inDep = document.createElement('input'); inDep.type = 'time';
+      if (isActive) inDep.value = shiftType==='regular'?'15:40':'12:00';
+      inDep.addEventListener('change', updateSummary);
+      tdDep.appendChild(inDep); tr.appendChild(tdDep);
+      const tdLo = document.createElement('td'); tdLo.textContent = shiftType==='regular'?'12:00':''; tr.appendChild(tdLo);
+      const tdLi = document.createElement('td'); tdLi.textContent = shiftType==='regular'?'12:40':''; tr.appendChild(tdLi);
     }
+
     tbody.appendChild(tr);
   }
-  updateSummary();
-}
 
-function isWeekend(wd) {
-    return (wd === 0 || wd===6)
+  updateSummary();
 }
 
 function updateSummary() {
   let totalMinutes = 0;
   tbody.querySelectorAll('tr').forEach(tr => {
     const inputs = tr.querySelectorAll('input[type=time]');
-    if(inputs.length===2){
-      const [arr,dep]=inputs;
-      if(arr.value&&dep.value){
-        const [h1,m1]=arr.value.split(':').map(Number);
-        const [h2,m2]=dep.value.split(':').map(Number);
+    if (inputs.length === 2) {
+      const [arr, dep] = inputs;
+      if (arr.value && dep.value) {
+        const [h1, m1] = arr.value.split(':').map(Number);
+        const [h2, m2] = dep.value.split(':').map(Number);
         const lunchBreak = shiftType==='regular'?40:0;
-        const diff=(h2*60+m2)-(h1*60+m1)-lunchBreak;
-        if(diff>0) totalMinutes+=diff;
+        const diff = (h2*60 + m2) - (h1*60 + m1) - lunchBreak;
+        if (diff > 0) totalMinutes += diff;
       }
     }
   });
-  const hours=Math.floor(totalMinutes/60);
-  const minutes=totalMinutes%60;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
   summaryDiv.textContent = `Odpracované hodiny: ${hours}h ${minutes}m`;
 }
 
