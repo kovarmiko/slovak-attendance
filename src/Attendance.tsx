@@ -4,15 +4,39 @@ import React, { useState, useEffect, useMemo } from 'react';
 //  Module-level constants
 // --------------------
 const HOLIDAYS_2025: string[] = [
-  '2025-01-01', '2025-01-06', '2025-04-18', '2025-04-21', '2025-05-01',
-  '2025-05-08', '2025-07-05', '2025-08-29', '2025-09-01', '2025-09-15',
-  '2025-11-01', '2025-11-17', '2025-12-24', '2025-12-25', '2025-12-26'
+  '2025-01-01',
+  '2025-01-06',
+  '2025-04-18',
+  '2025-04-21',
+  '2025-05-01',
+  '2025-05-08',
+  '2025-07-05',
+  '2025-08-29',
+  '2025-09-01',
+  '2025-09-15',
+  '2025-11-01',
+  '2025-11-17',
+  '2025-12-24',
+  '2025-12-25',
+  '2025-12-26',
 ];
 
 // Types
-interface TimeRecord { in?: string; out?: string; }
+interface TimeRecord {
+  in?: string;
+  out?: string;
+}
 type ShiftType = 'regular' | 'shortened';
-interface Summary { workedDays: number; vacationDays: number; }
+interface Summary {
+  workedDays: number;
+  vacationDays: number;
+  pn: number;
+  ocr: number;
+  unpaid: number;
+  compensatory: number;
+  other: number;
+  doctor: number;
+}
 
 export default function Attendance(): JSX.Element {
   // State
@@ -22,7 +46,16 @@ export default function Attendance(): JSX.Element {
   const [lastName, setLastName] = useState<string>('');
   const [vacations, setVacations] = useState<Set<string>>(new Set());
   const [times, setTimes] = useState<Record<string, TimeRecord>>({});
-  const [summary, setSummary] = useState<Summary>({ workedDays: 0, vacationDays: 0 });
+  const [summary, setSummary] = useState<Summary>({
+    workedDays: 0,
+    vacationDays: 0,
+    pn: 0,
+    ocr: 0,
+    unpaid: 0,
+    compensatory: 0,
+    other: 0,
+    doctor: 0,
+  });
 
   // Styles injection
   const styles = `
@@ -107,7 +140,15 @@ export default function Attendance(): JSX.Element {
       }
       /* Remove any page breaks */
       .page-break, .break { display: none !important; }
+
+      /* Remove select arrow in print */
+      select {
+        -webkit-appearance: none !important;
+        -moz-appearance: none !important;
+        appearance: none !important;
+      }
     }
+
   `;
 
   // Helpers
@@ -118,6 +159,15 @@ export default function Attendance(): JSX.Element {
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
   const daysCount = daysInMonth(year, month);
+  const outOfOfficeOptions: Array<Partial<Record<keyof Summary, string>>> = [
+    { vacationDays: 'Dovolenka' },
+    { doctor: 'Lekár' },
+    { pn: 'PN' },
+    { ocr: 'OČR' },
+    { unpaid: 'Neplatene voľno' },
+    { compensatory: 'Nahradné voľno' },
+    { other: 'Iné' },
+  ];
 
   // --------------------
   //  Derived data (memoised)
@@ -125,7 +175,9 @@ export default function Attendance(): JSX.Element {
   const workDates: string[] = useMemo(() => {
     const arr: string[] = [];
     for (let d = 1; d <= daysCount; d++) {
-      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(
+        d
+      ).padStart(2, '0')}`;
       const wd = new Date(year, month, d).getDay();
       if (wd >= 1 && wd <= 5 && !HOLIDAYS_2025.includes(iso)) arr.push(iso);
     }
@@ -154,7 +206,7 @@ export default function Attendance(): JSX.Element {
       activeDates.forEach((iso) => {
         newTimes[iso] = {
           in: '07:00',
-          out: shiftType === 'regular' ? '15:40' : '12:00'
+          out: shiftType === 'regular' ? '15:40' : '12:00',
         };
       });
       setTimes(newTimes);
@@ -176,14 +228,19 @@ export default function Attendance(): JSX.Element {
     field: keyof TimeRecord,
     value: string
   ) => {
-    setTimes((prev) => ({ ...prev, [iso]: { ...(prev[iso] || {}), [field]: value } }));
+    setTimes((prev) => ({
+      ...prev,
+      [iso]: { ...(prev[iso] || {}), [field]: value },
+    }));
   };
 
   // --------------------
   //  Summary calculation (days only)
   // --------------------
   useEffect(() => {
-    const vacationDays = Array.from(vacations).filter((iso) => activeSet.has(iso)).length;
+    const vacationDays = Array.from(vacations).filter((iso) =>
+      activeSet.has(iso)
+    ).length;
     const workedDays = activeDates.length - vacationDays;
     setSummary({ workedDays, vacationDays });
   }, [vacations, activeDates, activeSet]);
@@ -200,35 +257,38 @@ export default function Attendance(): JSX.Element {
       <div>
         <h1>Dochádzka</h1>
 
-        <div className="user-info">
-          <label className="mr-2">Meno a&nbsp;priezvisko:</label>
+        <div className='user-info'>
+          <label className='mr-2'>Meno a&nbsp;priezvisko:</label>
           <input
-            id="firstName"
-            className="mr-2"
+            id='firstName'
+            className='mr-2'
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            placeholder="krstné meno"
+            placeholder='krstné meno'
           />{' '}
           <input
-            id="lastName"
-            className="mr-2"
+            id='lastName'
+            className='mr-2'
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            placeholder="priezvisko"
+            placeholder='priezvisko'
           />
-          <span id="printName">
+          <span id='printName'>
             {firstName} {lastName}
           </span>
         </div>
 
-        <div className="period">
+        <div className='period'>
           <label>Obdobie:</label>
           <span>
-            {currentDate.toLocaleDateString('sk-SK', { month: 'long', year: 'numeric' })}
+            {currentDate.toLocaleDateString('sk-SK', {
+              month: 'long',
+              year: 'numeric',
+            })}
           </span>
         </div>
 
-        <div className="controls">
+        <div className='controls'>
           <button
             className={`${anotherMonthButtonClass} mr-2`}
             onClick={() =>
@@ -253,10 +313,10 @@ export default function Attendance(): JSX.Element {
           >
             Nasledujúci mesiac »
           </button>
-          <label className="mr-2">
+          <label className='mr-2'>
             <input
-              type="radio"
-              name="shiftToggle"
+              type='radio'
+              name='shiftToggle'
               checked={shiftType === 'regular'}
               onChange={() => setShiftType('regular')}
             />{' '}
@@ -264,8 +324,8 @@ export default function Attendance(): JSX.Element {
           </label>
           <label>
             <input
-              type="radio"
-              name="shiftToggle"
+              type='radio'
+              name='shiftToggle'
               checked={shiftType === 'shortened'}
               onChange={() => setShiftType('shortened')}
             />{' '}
@@ -278,7 +338,7 @@ export default function Attendance(): JSX.Element {
             <tr>
               <th>Deň</th>
               <th>Dátum</th>
-              <th className="vacation">Dovolenka</th>
+              <th className='vacation'>Mimo práce</th>
               <th>Príchod</th>
               <th>Odchod</th>
               <th>Obed Odchod</th>
@@ -287,10 +347,10 @@ export default function Attendance(): JSX.Element {
           </thead>
           <tbody>
             {Array.from({ length: daysCount }, (_, i) => i + 1).map((d) => {
-              const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(
+              const iso = `${year}-${String(month + 1).padStart(
                 2,
                 '0'
-              )}`;
+              )}-${String(d).padStart(2, '0')}`;
               const dt = new Date(year, month, d);
               const wd = dt.getDay();
               const isHoliday = HOLIDAYS_2025.includes(iso);
@@ -299,20 +359,24 @@ export default function Attendance(): JSX.Element {
 
               if (isWeekend)
                 return (
-                  <tr key={iso} className="weekend">
-                    <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
+                  <tr key={iso} className='weekend'>
+                    <td>
+                      {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
+                    </td>
                     <td>{dateDM}</td>
-                    <td className="vacation"></td>
+                    <td className='vacation'></td>
                     <td colSpan={4}></td>
                   </tr>
                 );
 
               if (isHoliday)
                 return (
-                  <tr key={iso} className="day-name">
-                    <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
+                  <tr key={iso} className='day-name'>
+                    <td>
+                      {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
+                    </td>
                     <td>{dateDM}</td>
-                    <td className="vacation"></td>
+                    <td className='vacation'></td>
                     <td colSpan={4}>Štátny sviatok</td>
                   </tr>
                 );
@@ -325,9 +389,9 @@ export default function Attendance(): JSX.Element {
                 <tr key={iso}>
                   <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
                   <td>{dateDM}</td>
-                  <td className="vacation">
+                  <td className='vacation'>
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={vac}
                       onChange={() => toggleVacation(iso)}
                     />
@@ -337,17 +401,21 @@ export default function Attendance(): JSX.Element {
                     <>
                       <td>
                         <input
-                          type="time"
+                          type='time'
                           value={rec.in || ''}
-                          onChange={(e) => handleTimeChange(iso, 'in', e.target.value)}
+                          onChange={(e) =>
+                            handleTimeChange(iso, 'in', e.target.value)
+                          }
                           disabled={!active}
                         />
                       </td>
                       <td>
                         <input
-                          type="time"
+                          type='time'
                           value={rec.out || ''}
-                          onChange={(e) => handleTimeChange(iso, 'out', e.target.value)}
+                          onChange={(e) =>
+                            handleTimeChange(iso, 'out', e.target.value)
+                          }
                           disabled={!active}
                         />
                       </td>
@@ -364,7 +432,17 @@ export default function Attendance(): JSX.Element {
                       )}
                     </>
                   ) : (
-                    <td colSpan={4}>Dovolenka</td>
+                    <td colSpan={4}>
+                      <select>
+                        {outOfOfficeOptions.flatMap((o, i) =>
+                          Object.entries(o).map(([key, label]) => (
+                            <option key={`${key}-${i}`} value={key}>
+                              {label}
+                            </option>
+                          ))
+                        )}
+                      </select>
+                    </td>
                   )}
                 </tr>
               );
@@ -372,10 +450,21 @@ export default function Attendance(): JSX.Element {
           </tbody>
         </table>
 
-        <div id="summary">
-          Odpracované dni: {summary.workedDays}
-          <br />
-          Dovolenkové dni: {summary.vacationDays}
+        <div id='summary'>
+          {summary.workedDays > 0 && (
+            <span>Odpracované dni: {summary.workedDays}</span>
+          )}
+          {summary.vacationDays > 0 && (
+            <span>Dovolenkové dni: {summary.vacationDays}</span>
+          )}
+          {summary.doctor > 0 && <span>Dovolenkové dni: {summary.doctor}</span>}
+          {summary.pn > 0 && <span>PN: {summary.pn}</span>}
+          {summary.ocr > 0 && <span>OČR: {summary.ocr}</span>}
+          {summary.unpaid > 0 && <span>Neplatené voľno: {summary.unpaid}</span>}
+          {summary.other > 0 && <span>Iné: {summary.other}</span>}
+          {summary.compensatory > 0 && (
+            <span>Náhradné voľno: {summary.compensatory}</span>
+          )}
         </div>
       </div>
     </>
