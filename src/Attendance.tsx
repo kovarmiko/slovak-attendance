@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { styles } from './styles';
 
 // --------------------
 //  Module-level constants
@@ -29,7 +30,7 @@ interface TimeRecord {
 type ShiftType = 'regular' | 'shortened';
 interface Summary {
   workedDays: number;
-  vacationDays: number;
+  vacation: number;
   pn: number;
   ocr: number;
   unpaid: number;
@@ -38,118 +39,28 @@ interface Summary {
   doctor: number;
 }
 
+type VacationType = { key: string; value: keyof Summary };
+
+const defaultSummary = {
+  workedDays: 0,
+  vacation: 0,
+  pn: 0,
+  ocr: 0,
+  unpaid: 0,
+  compensatory: 0,
+  other: 0,
+  doctor: 0,
+};
+
 export default function Attendance(): JSX.Element {
   // State
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [shiftType, setShiftType] = useState<ShiftType>('regular');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const [vacations, setVacations] = useState<Set<string>>(new Set());
+  const [vacations, setVacations] = useState<Set<VacationType>>(new Set());
   const [times, setTimes] = useState<Record<string, TimeRecord>>({});
-  const [summary, setSummary] = useState<Summary>({
-    workedDays: 0,
-    vacationDays: 0,
-    pn: 0,
-    ocr: 0,
-    unpaid: 0,
-    compensatory: 0,
-    other: 0,
-    doctor: 0,
-  });
-
-  // Styles injection
-  const styles = `
-    body { font-family: sans-serif; padding: 20px; }
-    h1 { text-align: center; }
-    .controls { text-align: center; margin-bottom: 10px; }
-    .user-info { margin-bottom: 10px; }
-    .period { margin-bottom: 20px; }
-    .period label { font-weight: normal; margin-right: 5px; }
-    .period span, #printName { font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-    th, td { border: 1px solid #ccc; padding: 6px 8px; text-align: center; }
-    th { background: #f0f0f0; }
-    .day-name { background: #ffff99; }
-    .weekend td, tr > td:first-child { background: #ffff99; }
-    #summary { margin-top: 20px; font-weight: bold; text-align: right; }
-
-    /* PRINT OPTIMIZATION FOR A4 */
-    @media print {
-      html, body {
-        width: 200mm;
-        height: 297mm;
-        margin: 0 !important;
-        padding: 0 !important;
-        font-size: 11px !important;
-        background: white !important;
-      }
-      @page {
-        size: A4 portrait;
-        margin: 10mm 8mm 10mm 8mm;
-      }
-      h1 {
-        font-size: 18px !important;
-        margin: 0 0 6px 0 !important;
-      }
-      .user-info, .period {
-        margin-bottom: 6px !important;
-      }
-      .period label, .user-info label {
-        font-size: 11px !important;
-      }
-      .period span, #printName {
-        font-size: 12px !important;
-      }
-      table {
-        font-size: 10px !important;
-        margin-top: 4px !important;
-        table-layout: fixed;
-        width: 100% !important;
-        page-break-inside: avoid !important;
-      }
-      th, td {
-        padding: 2px 3px !important;
-        border-width: 1px !important;
-        word-break: break-word;
-        max-width: 60px;
-      }
-      th {
-        font-size: 10px !important;
-      }
-      .day-name, .weekend td, tr > td:first-child {
-        background: #ffff99 !important;
-      }
-      .vacation, .controls, .shift-toggle, #firstName, #lastName, .vacationChk {
-        display: none !important;
-      }
-      #summary {
-        margin-top: 8px !important;
-        font-size: 11px !important;
-        text-align: right !important;
-      }
-      /* Remove all box-shadows, extra borders, and colors for print clarity */
-      * {
-        box-shadow: none !important;
-        text-shadow: none !important;
-        background-image: none !important;
-      }
-      /* Prevent table from splitting across pages */
-      tr, thead, tbody, table {
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-      /* Remove any page breaks */
-      .page-break, .break { display: none !important; }
-
-      /* Remove select arrow in print */
-      select {
-        -webkit-appearance: none !important;
-        -moz-appearance: none !important;
-        appearance: none !important;
-      }
-    }
-
-  `;
+  const [summary, setSummary] = useState<Summary>({ ...defaultSummary });
 
   // Helpers
   const daysInMonth = (year: number, month: number): number =>
@@ -160,7 +71,7 @@ export default function Attendance(): JSX.Element {
   const month = currentDate.getMonth();
   const daysCount = daysInMonth(year, month);
   const outOfOfficeOptions: Array<Partial<Record<keyof Summary, string>>> = [
-    { vacationDays: 'Dovolenka' },
+    { vacation: 'Dovolenka' },
     { doctor: 'Lekár' },
     { pn: 'PN' },
     { ocr: 'OČR' },
@@ -215,11 +126,19 @@ export default function Attendance(): JSX.Element {
   }, [year, month, shiftType]);
 
   // Handlers
-  const toggleVacation = (iso: string) => {
+  const toggleVacation = (vacationOption: VacationType, checked: boolean) => {
     setVacations((prev) => {
-      const next = new Set(prev);
-      next.has(iso) ? next.delete(iso) : next.add(iso);
-      return next;
+      const existing = Array.from(prev).find(({ key }) => {
+        return key === vacationOption.key;
+      });
+
+      if (existing) {
+        prev.delete(existing);
+      }
+      if (checked) {
+        prev.add(vacationOption);
+      }
+      return new Set(prev);
     });
   };
 
@@ -238,11 +157,14 @@ export default function Attendance(): JSX.Element {
   //  Summary calculation (days only)
   // --------------------
   useEffect(() => {
-    const vacationDays = Array.from(vacations).filter((iso) =>
-      activeSet.has(iso)
-    ).length;
-    const workedDays = activeDates.length - vacationDays;
-    setSummary({ workedDays, vacationDays });
+    const summaryHolder: Summary = { ...defaultSummary };
+    const vacationsArray = Array.from(vacations);
+
+    summaryHolder.workedDays = activeDates.length - vacationsArray.length;
+
+    Array.from(vacations).forEach(({ value }) => (summaryHolder[value] += 1));
+
+    setSummary(summaryHolder);
   }, [vacations, activeDates, activeSet]);
 
   // Helper for d.m. format
@@ -382,7 +304,7 @@ export default function Attendance(): JSX.Element {
                 );
 
               const active = activeSet.has(iso);
-              const vac = vacations.has(iso);
+              const vac = Array.from(vacations).some(({ key }) => key === iso);
               const rec = times[iso] || {};
 
               return (
@@ -393,7 +315,9 @@ export default function Attendance(): JSX.Element {
                     <input
                       type='checkbox'
                       checked={vac}
-                      onChange={() => toggleVacation(iso)}
+                      onChange={(e) =>
+                        toggleVacation({ key: iso, value: 'vacation' }, e.target.checked)
+                      }
                     />
                   </td>
 
@@ -433,7 +357,14 @@ export default function Attendance(): JSX.Element {
                     </>
                   ) : (
                     <td colSpan={4}>
-                      <select>
+                      <select
+                        onChange={(e) =>
+                          toggleVacation({
+                            key: iso,
+                            value: e.target.value as keyof Summary,
+                          }, true)
+                        }
+                      >
                         {outOfOfficeOptions.flatMap((o, i) =>
                           Object.entries(o).map(([key, label]) => (
                             <option key={`${key}-${i}`} value={key}>
@@ -454,8 +385,8 @@ export default function Attendance(): JSX.Element {
           {summary.workedDays > 0 && (
             <span>Odpracované dni: {summary.workedDays}</span>
           )}
-          {summary.vacationDays > 0 && (
-            <span>Dovolenkové dni: {summary.vacationDays}</span>
+          {summary.vacation > 0 && (
+            <span>Dovolenkové dni: {summary.vacation}</span>
           )}
           {summary.doctor > 0 && <span>Dovolenkové dni: {summary.doctor}</span>}
           {summary.pn > 0 && <span>PN: {summary.pn}</span>}
