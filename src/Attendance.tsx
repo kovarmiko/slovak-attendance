@@ -1,56 +1,16 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { styles } from './styles';
-
-// --------------------
-//  Module-level constants
-// --------------------
-const HOLIDAYS_2025: string[] = [
-  '2025-01-01',
-  '2025-01-06',
-  '2025-04-18',
-  '2025-04-21',
-  '2025-05-01',
-  '2025-05-08',
-  '2025-07-05',
-  '2025-08-29',
-  '2025-09-01',
-  '2025-09-15',
-  '2025-11-01',
-  '2025-11-17',
-  '2025-12-24',
-  '2025-12-25',
-  '2025-12-26',
-];
-
-// Types
-interface TimeRecord {
-  in?: string;
-  out?: string;
-}
-type ShiftType = 'regular' | 'shortened';
-interface Summary {
-  workedDays: number;
-  vacation: number;
-  pn: number;
-  ocr: number;
-  unpaid: number;
-  compensatory: number;
-  other: number;
-  doctor: number;
-}
-
-type VacationType = { key: string; value: keyof Summary };
-
-const defaultSummary = {
-  workedDays: 0,
-  vacation: 0,
-  pn: 0,
-  ocr: 0,
-  unpaid: 0,
-  compensatory: 0,
-  other: 0,
-  doctor: 0,
-};
+import {
+  TimeRecord,
+  ShiftType,
+  Summary,
+  VacationType,
+} from './types';
+import { HOLIDAYS_2025, defaultSummary } from './constants';
+import UserInfo from './components/UserInfo';
+import Controls from './components/Controls';
+import AttendanceTable from './components/AttendanceTable';
+import SummaryDisplay from './components/SummaryDisplay';
 
 export default function Attendance(): JSX.Element {
   // State
@@ -80,15 +40,11 @@ export default function Attendance(): JSX.Element {
     { other: 'Iné' },
   ];
 
-  // --------------------
-  //  Derived data (memoised)
-  // --------------------
+  // Derived data
   const workDates: string[] = useMemo(() => {
     const arr: string[] = [];
     for (let d = 1; d <= daysCount; d++) {
-      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(
-        d
-      ).padStart(2, '0')}`;
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
       const wd = new Date(year, month, d).getDay();
       if (wd >= 1 && wd <= 5 && !HOLIDAYS_2025.includes(iso)) arr.push(iso);
     }
@@ -97,9 +53,8 @@ export default function Attendance(): JSX.Element {
 
   const activeDates: string[] = useMemo(
     () => (shiftType === 'shortened' ? workDates.slice(0, 8) : workDates),
-    [workDates, shiftType]
+    [workDates, shiftType],
   );
-
   const activeSet = useMemo(() => new Set<string>(activeDates), [activeDates]);
 
   const anotherMonthButtonClass =
@@ -109,8 +64,7 @@ export default function Attendance(): JSX.Element {
   useEffect(() => {
     const timesKeys = Object.keys(times);
     const needsReset =
-      timesKeys.length !== activeDates.length ||
-      !activeDates.every((k) => timesKeys.includes(k));
+      timesKeys.length !== activeDates.length || !activeDates.every((k) => timesKeys.includes(k));
 
     if (needsReset) {
       const newTimes: Record<string, TimeRecord> = {};
@@ -122,84 +76,44 @@ export default function Attendance(): JSX.Element {
       });
       setTimes(newTimes);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [year, month, shiftType]);
 
   // Handlers
   const toggleVacation = (vacationOption: VacationType, checked: boolean) => {
     setVacations((prev) => {
-      const existing = Array.from(prev).find(({ key }) => {
-        return key === vacationOption.key;
-      });
-
-      if (existing) {
-        prev.delete(existing);
-      }
-      if (checked) {
-        prev.add(vacationOption);
-      }
+      const existing = Array.from(prev).find(({ key }) => key === vacationOption.key);
+      if (existing) prev.delete(existing);
+      if (checked) prev.add(vacationOption);
       return new Set(prev);
     });
   };
 
-  const handleTimeChange = (
-    iso: string,
-    field: keyof TimeRecord,
-    value: string
-  ) => {
+  const handleTimeChange = (iso: string, field: keyof TimeRecord, value: string) => {
     setTimes((prev) => ({
       ...prev,
       [iso]: { ...(prev[iso] || {}), [field]: value },
     }));
   };
 
-  // --------------------
-  //  Summary calculation (days only)
-  // --------------------
+  // Summary calculation
   useEffect(() => {
     const summaryHolder: Summary = { ...defaultSummary };
-    const vacationsArray = Array.from(vacations);
-
-    summaryHolder.workedDays = activeDates.length - vacationsArray.length;
-
+    summaryHolder.workedDays = activeDates.length - vacations.size;
     Array.from(vacations).forEach(({ value }) => (summaryHolder[value] += 1));
-
     setSummary(summaryHolder);
-  }, [vacations, activeDates, activeSet]);
+  }, [vacations, activeDates]);
 
-  // Helper for d.m. format
-  const formatDM = (date: Date) => `${date.getDate()}.${date.getMonth() + 1}.`;
-
-  // --------------------
-  //  Render
-  // --------------------
   return (
     <>
       <style>{styles}</style>
       <div>
         <h1>Dochádzka</h1>
-
-        <div className='user-info'>
-          <label className='mr-2'>Meno a&nbsp;priezvisko:</label>
-          <input
-            id='firstName'
-            className='mr-2'
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            placeholder='krstné meno'
-          />{' '}
-          <input
-            id='lastName'
-            className='mr-2'
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            placeholder='priezvisko'
-          />
-          <span id='printName'>
-            {firstName} {lastName}
-          </span>
-        </div>
-
+        <UserInfo
+          firstName={firstName}
+          lastName={lastName}
+          setFirstName={setFirstName}
+          setLastName={setLastName}
+        />
         <div className='period'>
           <label>Obdobie:</label>
           <span>
@@ -209,194 +123,26 @@ export default function Attendance(): JSX.Element {
             })}
           </span>
         </div>
-
-        <div className='controls'>
-          <button
-            className={`${anotherMonthButtonClass} mr-2`}
-            onClick={() =>
-              setCurrentDate((cd) => {
-                const d = new Date(cd); // clone to avoid mutation
-                d.setMonth(d.getMonth() - 1);
-                return d;
-              })
-            }
-          >
-            « Predchádzajúci mesiac
-          </button>
-          <button
-            className={`${anotherMonthButtonClass} mr-2`}
-            onClick={() =>
-              setCurrentDate((cd) => {
-                const d = new Date(cd); // clone to avoid mutation
-                d.setMonth(d.getMonth() + 1);
-                return d;
-              })
-            }
-          >
-            Nasledujúci mesiac »
-          </button>
-          <label className='mr-2'>
-            <input
-              type='radio'
-              name='shiftToggle'
-              checked={shiftType === 'regular'}
-              onChange={() => setShiftType('regular')}
-            />{' '}
-            Štandardný
-          </label>
-          <label>
-            <input
-              type='radio'
-              name='shiftToggle'
-              checked={shiftType === 'shortened'}
-              onChange={() => setShiftType('shortened')}
-            />{' '}
-            Skrátený
-          </label>
-        </div>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Deň</th>
-              <th>Dátum</th>
-              <th className='vacation'>Mimo práce</th>
-              <th>Príchod</th>
-              <th>Odchod</th>
-              <th>Obed Odchod</th>
-              <th>Obed Príchod</th>
-            </tr>
-          </thead>
-          <tbody>
-            {Array.from({ length: daysCount }, (_, i) => i + 1).map((d) => {
-              const iso = `${year}-${String(month + 1).padStart(
-                2,
-                '0'
-              )}-${String(d).padStart(2, '0')}`;
-              const dt = new Date(year, month, d);
-              const wd = dt.getDay();
-              const isHoliday = HOLIDAYS_2025.includes(iso);
-              const isWeekend = wd === 0 || wd === 6;
-              const dateDM = formatDM(dt);
-
-              if (isWeekend)
-                return (
-                  <tr key={iso} className='weekend'>
-                    <td>
-                      {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
-                    </td>
-                    <td>{dateDM}</td>
-                    <td className='vacation'></td>
-                    <td colSpan={4}></td>
-                  </tr>
-                );
-
-              if (isHoliday)
-                return (
-                  <tr key={iso} className='day-name'>
-                    <td>
-                      {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
-                    </td>
-                    <td>{dateDM}</td>
-                    <td className='vacation'></td>
-                    <td colSpan={4}>Štátny sviatok</td>
-                  </tr>
-                );
-
-              const active = activeSet.has(iso);
-              const vac = Array.from(vacations).some(({ key }) => key === iso);
-              const rec = times[iso] || {};
-
-              return (
-                <tr key={iso}>
-                  <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                  <td>{dateDM}</td>
-                  <td className='vacation'>
-                    <input
-                      type='checkbox'
-                      checked={vac}
-                      onChange={(e) =>
-                        toggleVacation({ key: iso, value: 'vacation' }, e.target.checked)
-                      }
-                    />
-                  </td>
-
-                  {!vac ? (
-                    <>
-                      <td>
-                        <input
-                          type='time'
-                          value={rec.in || ''}
-                          onChange={(e) =>
-                            handleTimeChange(iso, 'in', e.target.value)
-                          }
-                          disabled={!active}
-                        />
-                      </td>
-                      <td>
-                        <input
-                          type='time'
-                          value={rec.out || ''}
-                          onChange={(e) =>
-                            handleTimeChange(iso, 'out', e.target.value)
-                          }
-                          disabled={!active}
-                        />
-                      </td>
-                      {shiftType === 'regular' ? (
-                        <>
-                          <td>12:00</td>
-                          <td>12:40</td>
-                        </>
-                      ) : (
-                        <>
-                          <td></td>
-                          <td></td>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <td colSpan={4}>
-                      <select
-                        onChange={(e) =>
-                          toggleVacation({
-                            key: iso,
-                            value: e.target.value as keyof Summary,
-                          }, true)
-                        }
-                      >
-                        {outOfOfficeOptions.flatMap((o, i) =>
-                          Object.entries(o).map(([key, label]) => (
-                            <option key={`${key}-${i}`} value={key}>
-                              {label}
-                            </option>
-                          ))
-                        )}
-                      </select>
-                    </td>
-                  )}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-
-        <div id='summary'>
-          {summary.workedDays > 0 && (
-            <span>Odpracované dni: {summary.workedDays}</span>
-          )}
-          {summary.vacation > 0 && (
-            <span>Dovolenkové dni: {summary.vacation}</span>
-          )}
-          {summary.doctor > 0 && <span>Dovolenkové dni: {summary.doctor}</span>}
-          {summary.pn > 0 && <span>PN: {summary.pn}</span>}
-          {summary.ocr > 0 && <span>OČR: {summary.ocr}</span>}
-          {summary.unpaid > 0 && <span>Neplatené voľno: {summary.unpaid}</span>}
-          {summary.other > 0 && <span>Iné: {summary.other}</span>}
-          {summary.compensatory > 0 && (
-            <span>Náhradné voľno: {summary.compensatory}</span>
-          )}
-        </div>
+        <Controls
+          currentDate={currentDate}
+          setCurrentDate={setCurrentDate}
+          shiftType={shiftType}
+          setShiftType={setShiftType}
+          buttonClass={anotherMonthButtonClass}
+        />
+        <AttendanceTable
+          year={year}
+          month={month}
+          daysCount={daysCount}
+          activeSet={activeSet}
+          vacations={vacations}
+          toggleVacation={toggleVacation}
+          times={times}
+          handleTimeChange={handleTimeChange}
+          shiftType={shiftType}
+          outOfOfficeOptions={outOfOfficeOptions}
+        />
+        <SummaryDisplay summary={summary} />
       </div>
     </>
   );
