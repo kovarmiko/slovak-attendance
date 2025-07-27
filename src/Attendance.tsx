@@ -124,7 +124,6 @@ export default function Attendance(): JSX.Element {
           </span>
         </div>
         <Controls
-          currentDate={currentDate}
           setCurrentDate={setCurrentDate}
           shiftType={shiftType}
           setShiftType={setShiftType}

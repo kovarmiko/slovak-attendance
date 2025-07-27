@@ -1,9 +1,9 @@
 import { ShiftType } from '../types';
 
 interface Props {
-  setCurrentDate: (d: Date) => void;
+  setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
   shiftType: ShiftType;
-  setShiftType: (t: ShiftType) => void;
+  setShiftType: React.Dispatch<React.SetStateAction<ShiftType>>;
   buttonClass: string;
 }
 
