@@ -28,7 +28,7 @@ export default function UserInfo({
         onChange={(e) => setLastName(e.target.value)}
         placeholder='priezvisko'
       />
-      <span id='printName'>
+      <span id='printName' className="print-only">
         {firstName} {lastName}
       </span>
     </div>

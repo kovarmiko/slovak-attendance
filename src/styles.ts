@@ -13,6 +13,7 @@ export const styles = `
     .weekend td, tr > td:first-child { background: #ffff99; }
     #summary { margin-top: 20px; font-weight: bold; text-align: right; }
     #summary span { margin-right: 5px; }
+    .print-only { display: none; }
 
     /* Mobile optimization */
     @media (max-width: 600px) {
@@ -94,6 +95,9 @@ export const styles = `
         -webkit-appearance: none !important;
         -moz-appearance: none !important;
         appearance: none !important;
+      }
+      .print-only {
+        display: initial;
       }
     }
 
