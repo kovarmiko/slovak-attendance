@@ -9,7 +9,7 @@ export default function SummaryDisplay({ summary }: { summary: Summary }) {
       {summary.vacation > 0 && (
         <span>Dovolenkové dni: {summary.vacation}</span>
       )}
-      {summary.doctor > 0 && <span>Dovolenkové dni: {summary.doctor}</span>}
+      {summary.doctor > 0 && <span>Návšteva lekára: {summary.doctor}</span>}
       {summary.pn > 0 && <span>PN: {summary.pn}</span>}
       {summary.ocr > 0 && <span>OČR: {summary.ocr}</span>}
       {summary.unpaid > 0 && <span>Neplatené voľno: {summary.unpaid}</span>}
