@@ -14,6 +14,13 @@ export const styles = `
     #summary { margin-top: 20px; font-weight: bold; text-align: right; }
     #summary span { margin-right: 5px; }
 
+    /* Mobile optimization */
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      table { display: block; overflow-x: auto; }
+      th, td { font-size: 14px; padding: 4px; }
+    }
+
     /* PRINT OPTIMIZATION FOR A4 */
     @media print {
       html, body {

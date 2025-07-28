@@ -2,6 +2,7 @@
 <html lang="sk">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Pracovná dochádzka</title>
   <style>
     body { font-family: sans-serif; padding: 20px; }
@@ -18,6 +19,13 @@
     .weekend td { background: #ffff99; }
     #summary { margin-top: 20px; font-weight: bold; text-align: right; }
     input[type="time"] { width: 70px; }
+
+    /* Basic mobile responsive adjustments */
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      table { display: block; overflow-x: auto; }
+      th, td { font-size: 14px; padding: 4px; }
+    }
     @media print {
       .controls, .shift-toggle, #firstName, #lastName { display: none !important; }
       /* Compact print layout */

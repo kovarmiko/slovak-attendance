@@ -129,18 +129,20 @@ export default function Attendance(): JSX.Element {
           setShiftType={setShiftType}
           buttonClass={anotherMonthButtonClass}
         />
-        <AttendanceTable
-          year={year}
-          month={month}
-          daysCount={daysCount}
-          activeSet={activeSet}
-          vacations={vacations}
-          toggleVacation={toggleVacation}
-          times={times}
-          handleTimeChange={handleTimeChange}
-          shiftType={shiftType}
-          outOfOfficeOptions={outOfOfficeOptions}
-        />
+        <div className='overflow-x-auto'>
+          <AttendanceTable
+            year={year}
+            month={month}
+            daysCount={daysCount}
+            activeSet={activeSet}
+            vacations={vacations}
+            toggleVacation={toggleVacation}
+            times={times}
+            handleTimeChange={handleTimeChange}
+            shiftType={shiftType}
+            outOfOfficeOptions={outOfOfficeOptions}
+          />
+        </div>
         <SummaryDisplay summary={summary} />
       </div>
     </>
