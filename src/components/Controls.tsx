@@ -23,30 +23,40 @@ export default function Controls({
 
   return (
     <div className='controls'>
-      <button className={`${buttonClass} mr-2`} onClick={() => changeMonth(-1)}>
-        « Predchádzajúci mesiac
-      </button>
-      <button className={`${buttonClass} mr-2`} onClick={() => changeMonth(1)}>
-        Nasledujúci mesiac »
-      </button>
-      <label className='mr-2'>
-        <input
-          type='radio'
-          name='shiftToggle'
-          checked={shiftType === 'regular'}
-          onChange={() => setShiftType('regular')}
-        />{' '}
-        Štandardný
-      </label>
-      <label>
-        <input
-          type='radio'
-          name='shiftToggle'
-          checked={shiftType === 'shortened'}
-          onChange={() => setShiftType('shortened')}
-        />{' '}
-        Skrátený
-      </label>
+      <div className='block md:inline'>
+        <button
+          className={`${buttonClass} mr-2 my-1 w-full md:w-auto`}
+          onClick={() => changeMonth(-1)}
+        >
+          « Predchádzajúci mesiac
+        </button>
+        <button
+          className={`${buttonClass} mr-2 my-1 w-full md:w-auto`}
+          onClick={() => changeMonth(1)}
+        >
+          Nasledujúci mesiac »
+        </button>
+      </div>
+      <div className='block md:inline'>
+        <label className='mr-2'>
+          <input
+            type='radio'
+            name='shiftToggle'
+            checked={shiftType === 'regular'}
+            onChange={() => setShiftType('regular')}
+          />{' '}
+          Štandardný
+        </label>
+        <label>
+          <input
+            type='radio'
+            name='shiftToggle'
+            checked={shiftType === 'shortened'}
+            onChange={() => setShiftType('shortened')}
+          />{' '}
+          Skrátený
+        </label>
+      </div>
     </div>
   );
 }

@@ -107,7 +107,7 @@ export default function Attendance(): JSX.Element {
     <>
       <style>{styles}</style>
       <div>
-        <h1>Dochádzka</h1>
+        <h1 className="mt-2 text-3xl tracking-tight text-pretty">Dochádzka</h1>
         <UserInfo
           firstName={firstName}
           lastName={lastName}

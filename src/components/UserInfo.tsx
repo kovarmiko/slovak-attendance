@@ -13,20 +13,20 @@ export default function UserInfo({
 }: Props) {
   return (
     <div className='user-info'>
-      <label className='mr-2'>Meno a&nbsp;priezvisko:</label>
+      <label className='mr-2 print-only'>Meno a&nbsp;priezvisko:</label>
       <input
         id='firstName'
-        className='mr-2'
+        className='w-full md:w-auto mr-2 shadow appearance-none border rounded py-2 px-3 my-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
         value={firstName}
         onChange={(e) => setFirstName(e.target.value)}
-        placeholder='krstné meno'
+        placeholder='Krstné meno'
       />{' '}
       <input
         id='lastName'
-        className='mr-2'
+        className='w-full md:w-auto mr-2 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
         value={lastName}
         onChange={(e) => setLastName(e.target.value)}
-        placeholder='priezvisko'
+        placeholder='Priezvisko'
       />
       <span id='printName' className="print-only">
         {firstName} {lastName}
