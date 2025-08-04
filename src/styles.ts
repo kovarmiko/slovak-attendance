@@ -25,8 +25,6 @@ export const styles = `
     /* PRINT OPTIMIZATION FOR A4 */
     @media print {
       html, body {
-        width: 200mm;
-        height: 297mm;
         margin: 0 !important;
         padding: 0 !important;
         font-size: 11px !important;
@@ -34,7 +32,10 @@ export const styles = `
       }
       @page {
         size: A4 portrait;
-        margin: 10mm 8mm 10mm 8mm;
+        margin: 0;
+      }
+      body {
+        margin: 10mm 8mm 10mm 8mm !important;
       }
       h1 {
         font-size: 18px !important;
