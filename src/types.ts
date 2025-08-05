@@ -7,6 +7,7 @@ export type ShiftType = 'regular' | 'shortened';
 
 export interface Summary {
   workedDays: number;
+  workedHours: number;
   vacation: number;
   pn: number;
   ocr: number;

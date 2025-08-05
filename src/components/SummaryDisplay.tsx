@@ -1,11 +1,21 @@
-import { Summary } from '../types';
+import { Summary, ShiftType } from '../types';
 
-export default function SummaryDisplay({ summary }: { summary: Summary }) {
+export default function SummaryDisplay({
+  summary,
+  shiftType,
+}: {
+  summary: Summary;
+  shiftType: ShiftType;
+}) {
   return (
     <div id='summary'>
-      {summary.workedDays > 0 && (
-        <span>Odpracované dni: {summary.workedDays}</span>
-      )}
+      {shiftType === 'shortened'
+        ? summary.workedHours > 0 && (
+            <span>Odpracované hodiny: {summary.workedHours}</span>
+          )
+        : summary.workedDays > 0 && (
+            <span>Odpracované dni: {summary.workedDays}</span>
+          )}
       {summary.vacation > 0 && (
         <span>Dovolenkové dni: {summary.vacation}</span>
       )}
