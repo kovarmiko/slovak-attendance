@@ -76,7 +76,8 @@ export default function Attendance(): JSX.Element {
       });
       setTimes(newTimes);
     }
-  }, [year, month, shiftType]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeDates, shiftType]);
 
   // Handlers
   const toggleVacation = (vacationOption: VacationType, checked: boolean) => {
@@ -99,9 +100,25 @@ export default function Attendance(): JSX.Element {
   useEffect(() => {
     const summaryHolder: Summary = { ...defaultSummary };
     summaryHolder.workedDays = activeDates.length - vacations.size;
+
+    if (shiftType === 'shortened') {
+      let totalHours = 0;
+      activeDates.forEach((iso) => {
+        const isVacation = Array.from(vacations).some((v) => v.key === iso);
+        if (isVacation) return;
+        const rec = times[iso];
+        if (!rec?.in || !rec?.out) return;
+        const [inH, inM] = rec.in.split(':').map(Number);
+        const [outH, outM] = rec.out.split(':').map(Number);
+        const diff = outH * 60 + outM - (inH * 60 + inM);
+        totalHours += diff / 60;
+      });
+      summaryHolder.workedHours = Math.round(totalHours * 100) / 100;
+    }
+
     Array.from(vacations).forEach(({ value }) => (summaryHolder[value] += 1));
     setSummary(summaryHolder);
-  }, [vacations, activeDates]);
+  }, [vacations, activeDates, times, shiftType]);
 
   return (
     <>
@@ -151,7 +168,7 @@ export default function Attendance(): JSX.Element {
             outOfOfficeOptions={outOfOfficeOptions}
           />
         </div>
-        <SummaryDisplay summary={summary} />
+        <SummaryDisplay summary={summary} shiftType={shiftType} />
       </div>
     </>
   );

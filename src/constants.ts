@@ -20,6 +20,7 @@ export const HOLIDAYS_2025: string[] = [
 
 export const defaultSummary: Summary = {
   workedDays: 0,
+  workedHours: 0,
   vacation: 0,
   pn: 0,
   ocr: 0,
