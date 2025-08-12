@@ -8,10 +8,10 @@ import Sidebar from './components/Sidebar';
 
 function App() {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState<string>(window.location.hash || '#/attendance');
+  const [page, setPage] = useState<string>(window.location.hash || '#/about');
 
   useEffect(() => {
-    const onHashChange = () => setPage(window.location.hash || '#/attendance');
+    const onHashChange = () => setPage(window.location.hash || '#/about');
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -19,6 +19,7 @@ function App() {
   const renderPage = () => {
     switch (page) {
       case '#/about':
+      case '#/home':
         return <About />;
       case '#/faq':
         return <FAQ />;

@@ -1,4 +1,4 @@
-import { Info, HelpCircle, BookOpen, ClipboardList, Home } from 'lucide-react';
+import { HelpCircle, BookOpen, ClipboardList, Home } from 'lucide-react';
 import classes from './Sidebar.module.scss';
 
 interface SidebarProps {
@@ -12,7 +12,7 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
       <div className={classes.sidebar__content}>
         <nav className="flex flex-col space-y-2 p-2">
           <a
-            href="#/home"
+            href="#/about"
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${currentPage === '#/about' ? 'bg-gray-200 text-gray-900 font-medium' : ''}`}
           >
             <Home size={16} />
