@@ -5,13 +5,14 @@ import FAQ from './FAQ';
 import Tutorials from './Tutorials';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
 
 function App() {
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState<string>(window.location.hash || '#/attendance');
+  const [page, setPage] = useState<string>(window.location.hash || '#/about');
 
   useEffect(() => {
-    const onHashChange = () => setPage(window.location.hash || '#/attendance');
+    const onHashChange = () => setPage(window.location.hash || '#/about');
     window.addEventListener('hashchange', onHashChange);
     return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
@@ -19,6 +20,7 @@ function App() {
   const renderPage = () => {
     switch (page) {
       case '#/about':
+      case '#/home':
         return <About />;
       case '#/faq':
         return <FAQ />;
@@ -33,12 +35,13 @@ function App() {
   return (
     <>
       <Header onMenuClick={() => setOpen((o) => !o)} />
-      <div className='content flex'>
+      <div className='content flex pb-8'>
         <Sidebar isOpen={open} currentPage={page} />
         <div className='p-6 flex-1'>
           {renderPage()}
         </div>
       </div>
+      <Footer />
     </>
   );
 }
