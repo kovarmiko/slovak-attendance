@@ -7,12 +7,12 @@ function App() {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Sidebar isOpen={open} />
-      <div
-        className={`transition-transform duration-300 ${open ? 'translate-x-64' : ''}`}
-      >
-        <Header onMenuClick={() => setOpen((o) => !o)} />
-        <Attendance />
+      <Header onMenuClick={() => setOpen((o) => !o)} />
+      <div className='content flex'>
+        <Sidebar isOpen={open} />
+        <div className='p-6 flex-1'>
+          <Attendance />
+        </div>
       </div>
     </>
   );
