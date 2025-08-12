@@ -5,6 +5,7 @@ import FAQ from './FAQ';
 import Tutorials from './Tutorials';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
+import Footer from './components/Footer';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -34,12 +35,13 @@ function App() {
   return (
     <>
       <Header onMenuClick={() => setOpen((o) => !o)} />
-      <div className='content flex'>
+      <div className='content flex pb-8'>
         <Sidebar isOpen={open} currentPage={page} />
         <div className='p-6 flex-1'>
           {renderPage()}
         </div>
       </div>
+      <Footer />
     </>
   );
 }
