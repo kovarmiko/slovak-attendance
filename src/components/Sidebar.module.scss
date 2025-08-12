@@ -3,6 +3,10 @@
   visibility: hidden;
   overflow: hidden;
   transition: width 0.5s, visibility 0s; /* no delay by default */
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  align-self: flex-start;
 }
 
 .sidebar__content {
@@ -19,5 +23,16 @@
 .sidebar.open .sidebar__content {
   opacity: 1;
   transition-delay: 0.5s; /* start fading in after width animation ends */
+}
+
+@media (max-width: 640px) {
+  .sidebar {
+    position: fixed;
+    z-index: 50;
+    left: 0;
+    top: 0;
+    height: 100vh;
+    background: white;
+  }
 }
 
