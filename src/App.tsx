@@ -34,7 +34,7 @@ function App() {
     <>
       <Header onMenuClick={() => setOpen((o) => !o)} />
       <div className='content flex'>
-        <Sidebar isOpen={open} />
+        <Sidebar isOpen={open} currentPage={page} />
         <div className='p-6 flex-1'>
           {renderPage()}
         </div>
