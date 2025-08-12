@@ -1,0 +1,81 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+
+  th,
+  td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    text-align: center;
+  }
+
+  th {
+    background: #f0f0f0;
+  }
+
+  tr > td:first-child {
+    background: #ffff99;
+  }
+}
+
+.dayName {
+  background: #ffff99;
+}
+
+.weekend td {
+  background: #ffff99;
+}
+
+@media (max-width: 600px) {
+  .table {
+    display: block;
+    overflow-x: auto;
+
+    th,
+    td {
+      font-size: 14px;
+      padding: 4px;
+    }
+  }
+}
+
+@media print {
+  .table {
+    font-size: 10px !important;
+    margin-top: 4px !important;
+    table-layout: fixed;
+    width: 100% !important;
+    page-break-inside: avoid !important;
+  }
+
+  th,
+  td {
+    padding: 2px 3px !important;
+    border-width: 1px !important;
+    word-break: break-word;
+    max-width: 60px;
+  }
+
+  th {
+    font-size: 10px !important;
+  }
+
+  .dayName,
+  .weekend td,
+  tr > td:first-child {
+    background: #ffff99 !important;
+  }
+
+  .vacation {
+    display: none !important;
+  }
+
+  tr,
+  thead,
+  tbody,
+  table {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+}

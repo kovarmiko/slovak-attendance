@@ -6,6 +6,7 @@ import {
 } from '../types';
 import { HOLIDAYS_2025 } from '../constants';
 import React from 'react';
+import classes from './AttendanceTable.module.scss';
 
 interface Props {
   year: number;
@@ -39,12 +40,12 @@ export default function AttendanceTable({
   outOfOfficeOptions,
 }: Props) {
   return (
-    <table>
+    <table className={classes.table}>
       <thead>
         <tr>
           <th>Deň</th>
           <th>Dátum</th>
-          <th className='vacation'>Mimo práce</th>
+          <th className={classes.vacation}>Mimo práce</th>
           <th>Príchod</th>
           <th>Odchod</th>
           <th>Obed Odchod</th>
@@ -62,20 +63,20 @@ export default function AttendanceTable({
 
           if (isWeekend)
             return (
-              <tr key={iso} className='weekend'>
+              <tr key={iso} className={classes.weekend}>
                 <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
                 <td>{dateDM}</td>
-                <td className='vacation'></td>
+                <td className={classes.vacation}></td>
                 <td colSpan={4}></td>
               </tr>
             );
 
           if (isHoliday)
             return (
-              <tr key={iso} className='day-name'>
+              <tr key={iso} className={classes.dayName}>
                 <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
                 <td>{dateDM}</td>
-                <td className='vacation'></td>
+                <td className={classes.vacation}></td>
                 <td colSpan={4}>Štátny sviatok</td>
               </tr>
             );
@@ -88,7 +89,7 @@ export default function AttendanceTable({
             <tr key={iso}>
               <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
               <td>{dateDM}</td>
-              <td className='vacation'>
+              <td className={classes.vacation}>
                 <input
                   type='checkbox'
                   checked={vac}

@@ -1,4 +1,5 @@
 import { Summary, ShiftType } from '../types';
+import classes from './SummaryDisplay.module.scss';
 
 export default function SummaryDisplay({
   summary,
@@ -8,7 +9,7 @@ export default function SummaryDisplay({
   shiftType: ShiftType;
 }) {
   return (
-    <div id='summary'>
+    <div className={classes.summary}>
       {shiftType === 'shortened'
         ? summary.workedHours > 0 && (
             <span>Odpracované hodiny: {summary.workedHours}</span>

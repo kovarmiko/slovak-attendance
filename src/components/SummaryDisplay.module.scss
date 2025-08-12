@@ -1,0 +1,15 @@
+.summary {
+  margin-top: 20px;
+  font-weight: bold;
+  text-align: right;
+
+  span {
+    margin-right: 5px;
+  }
+
+  @media print {
+    margin-top: 8px !important;
+    font-size: 11px !important;
+    text-align: right !important;
+  }
+}
