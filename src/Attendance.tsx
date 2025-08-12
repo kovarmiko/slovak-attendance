@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { styles } from './styles';
+import "./Attendance.css"
 import {
   TimeRecord,
   ShiftType,
@@ -121,8 +121,7 @@ export default function Attendance(): JSX.Element {
   }, [vacations, activeDates, times, shiftType]);
 
   return (
-    <>
-      <style>{styles}</style>
+    <div>
       <div>
         <div className="flex items-center justify-center">
           <h1 className="mt-2 text-3xl tracking-tight text-pretty">Dochádzka</h1>
@@ -170,6 +169,6 @@ export default function Attendance(): JSX.Element {
         </div>
         <SummaryDisplay summary={summary} shiftType={shiftType} />
       </div>
-    </>
+    </div>
   );
 }
