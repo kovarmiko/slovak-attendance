@@ -12,7 +12,12 @@ export default function Sidebar({ isOpen }: SidebarProps) {
         isOpen ? classes.open: ''
       }`}
     >
-      Working on the main menu. Check back soon!
+      <nav className="flex flex-col space-y-2">
+        <a href="#/about">About</a>
+        <a href="#/faq">FAQ</a>
+        <a href="#/tutorials">Tutorials</a>
+        <a href="#/attendance">Attendance</a>
+      </nav>
     </aside>
   );
 }
