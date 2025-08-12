@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { styles } from './styles';
+import classes from './Attendance.module.scss';
 import {
   TimeRecord,
   ShiftType,
@@ -121,55 +121,52 @@ export default function Attendance(): JSX.Element {
   }, [vacations, activeDates, times, shiftType]);
 
   return (
-    <>
-      <style>{styles}</style>
-      <div>
-        <div className="flex items-center justify-center">
-          <h1 className="mt-2 text-3xl tracking-tight text-pretty">Dochádzka</h1>
-          <button
-            onClick={() => window.print()}
-            className="ml-4 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded print:hidden"
-          >
-            Tlačiť
-          </button>
-        </div>
-        <UserInfo
-          firstName={firstName}
-          lastName={lastName}
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-        />
-        <div className='period'>
-          <label>Obdobie:</label>
-          <span>
-            {currentDate.toLocaleDateString('sk-SK', {
-              month: 'long',
-              year: 'numeric',
-            })}
-          </span>
-        </div>
-        <Controls
-          setCurrentDate={setCurrentDate}
-          shiftType={shiftType}
-          setShiftType={setShiftType}
-          buttonClass={anotherMonthButtonClass}
-        />
-        <div className='overflow-x-auto'>
-          <AttendanceTable
-            year={year}
-            month={month}
-            daysCount={daysCount}
-            activeSet={activeSet}
-            vacations={vacations}
-            toggleVacation={toggleVacation}
-            times={times}
-            handleTimeChange={handleTimeChange}
-            shiftType={shiftType}
-            outOfOfficeOptions={outOfOfficeOptions}
-          />
-        </div>
-        <SummaryDisplay summary={summary} shiftType={shiftType} />
+    <div className={classes.attendance}>
+      <div className="flex items-center justify-center">
+        <h1 className="mt-2 text-3xl tracking-tight text-pretty">Dochádzka</h1>
+        <button
+          onClick={() => window.print()}
+          className="ml-4 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded print:hidden"
+        >
+          Tlačiť
+        </button>
       </div>
-    </>
+      <UserInfo
+        firstName={firstName}
+        lastName={lastName}
+        setFirstName={setFirstName}
+        setLastName={setLastName}
+      />
+      <div className={classes.period}>
+        <label>Obdobie:</label>
+        <span>
+          {currentDate.toLocaleDateString('sk-SK', {
+            month: 'long',
+            year: 'numeric',
+          })}
+        </span>
+      </div>
+      <Controls
+        setCurrentDate={setCurrentDate}
+        shiftType={shiftType}
+        setShiftType={setShiftType}
+        buttonClass={anotherMonthButtonClass}
+      />
+      <div className='overflow-x-auto'>
+        <AttendanceTable
+          year={year}
+          month={month}
+          daysCount={daysCount}
+          activeSet={activeSet}
+          vacations={vacations}
+          toggleVacation={toggleVacation}
+          times={times}
+          handleTimeChange={handleTimeChange}
+          shiftType={shiftType}
+          outOfOfficeOptions={outOfOfficeOptions}
+        />
+      </div>
+      <SummaryDisplay summary={summary} shiftType={shiftType} />
+    </div>
   );
 }

@@ -1,3 +1,5 @@
+import classes from './UserInfo.module.scss';
+
 interface Props {
   firstName: string;
   lastName: string;
@@ -12,8 +14,8 @@ export default function UserInfo({
   setLastName,
 }: Props) {
   return (
-    <div className='user-info'>
-      <label className='mr-2 print-only'>Meno a&nbsp;priezvisko:</label>
+    <div className={classes.userInfo}>
+      <label className={`mr-2 ${classes.printOnly}`}>Meno a&nbsp;priezvisko:</label>
       <input
         id='firstName'
         className='w-full md:w-auto mr-2 shadow appearance-none border rounded py-2 px-3 my-2 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
@@ -28,7 +30,7 @@ export default function UserInfo({
         onChange={(e) => setLastName(e.target.value)}
         placeholder='Priezvisko'
       />
-      <span id='printName' className="print-only">
+      <span className={`${classes.printName} ${classes.printOnly}`}>
         {firstName} {lastName}
       </span>
     </div>
