@@ -1,0 +1,30 @@
+.userInfo {
+  margin-bottom: 10px;
+
+  @media print {
+    margin-bottom: 6px !important;
+  }
+}
+
+.printName {
+  font-weight: bold;
+
+  @media print {
+    font-size: 12px !important;
+  }
+}
+
+.printOnly {
+  display: none;
+
+  @media print {
+    display: initial;
+  }
+}
+
+@media print {
+  :global(#firstName),
+  :global(#lastName) {
+    display: none !important;
+  }
+}

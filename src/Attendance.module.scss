@@ -1,0 +1,42 @@
+.attendance {
+  font-family: sans-serif;
+  padding: 20px;
+
+  @media (max-width: 600px) {
+    padding: 10px;
+  }
+
+  @media print {
+    font-size: 11px !important;
+    margin: 10mm 8mm 10mm 8mm !important;
+    h1 {
+      font-size: 18px !important;
+      margin: 0 0 6px 0 !important;
+    }
+  }
+}
+
+.period {
+  margin-bottom: 20px;
+
+  label {
+    font-weight: normal;
+    margin-right: 5px;
+
+    @media print {
+      font-size: 11px !important;
+    }
+  }
+
+  span {
+    font-weight: bold;
+
+    @media print {
+      font-size: 12px !important;
+    }
+  }
+
+  @media print {
+    margin-bottom: 6px !important;
+  }
+}

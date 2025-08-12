@@ -1,4 +1,5 @@
 import { ShiftType } from '../types';
+import classes from './Controls.module.scss';
 
 interface Props {
   setCurrentDate: React.Dispatch<React.SetStateAction<Date>>;
@@ -22,7 +23,7 @@ export default function Controls({
   };
 
   return (
-    <div className='controls'>
+    <div className={classes.controls}>
       <div className='block md:inline'>
         <button
           className={`${buttonClass} mr-2 my-1 w-full md:w-auto`}

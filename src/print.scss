@@ -1,0 +1,35 @@
+@media print {
+  html,
+  body {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 11px !important;
+    background: white !important;
+  }
+
+  @page {
+    size: A4 portrait;
+    margin: 0;
+  }
+
+  body {
+    margin: 10mm 8mm 10mm 8mm !important;
+  }
+
+  * {
+    box-shadow: none !important;
+    text-shadow: none !important;
+    background-image: none !important;
+  }
+
+  .page-break,
+  .break {
+    display: none !important;
+  }
+
+  select {
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    appearance: none !important;
+  }
+}
