@@ -7,6 +7,7 @@ import Terms from './Terms';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
+import CookieConsent from './components/CookieConsent';
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -45,6 +46,7 @@ function App() {
         </div>
       </div>
       <Footer />
+      <CookieConsent />
     </>
   );
 }
