@@ -1,0 +1,23 @@
+.sidebar {
+  width: 0px;
+  visibility: hidden;
+  overflow: hidden;
+  transition: width 0.5s, visibility 0s; /* no delay by default */
+}
+
+.sidebar__content {
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.sidebar.open {
+  width: 200px;
+  visibility: visible;
+  transition: width 0.5s, visibility 0s 0.5s; /* delay visibility until open */
+}
+
+.sidebar.open .sidebar__content {
+  opacity: 1;
+  transition-delay: 0.5s; /* start fading in after width animation ends */
+}
+

@@ -1,3 +1,6 @@
+import classes from './Sidebar.module.scss';
+
+
 interface SidebarProps {
   isOpen: boolean;
 }
@@ -5,11 +8,11 @@ interface SidebarProps {
 export default function Sidebar({ isOpen }: SidebarProps) {
   return (
     <aside
-      className={`${
-        isOpen ? 'w-auto' : 'w-0 truncate'
+      className={`${classes.sidebar} ${
+        isOpen ? classes.open: ''
       }`}
     >
-      Sidebar content goes here
+      Working on the main menu. Check back soon!
     </aside>
   );
 }
