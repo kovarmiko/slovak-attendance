@@ -1,4 +1,4 @@
-import { Info, HelpCircle, BookOpen, ClipboardList } from 'lucide-react';
+import { Info, HelpCircle, BookOpen, ClipboardList, Home } from 'lucide-react';
 import classes from './Sidebar.module.scss';
 
 interface SidebarProps {
@@ -12,32 +12,32 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
       <div className={classes.sidebar__content}>
         <nav className="flex flex-col space-y-2 p-2">
           <a
-            href="#/about"
+            href="#/home"
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${currentPage === '#/about' ? 'bg-gray-200 text-gray-900 font-medium' : ''}`}
           >
-            <Info size={16} />
-            About
+            <Home size={16} />
+            Domov
           </a>
           <a
             href="#/faq"
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${currentPage === '#/faq' ? 'bg-gray-200 text-gray-900 font-medium' : ''}`}
           >
             <HelpCircle size={16} />
-            FAQ
+             Časté otázky
           </a>
           <a
             href="#/tutorials"
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${currentPage === '#/tutorials' ? 'bg-gray-200 text-gray-900 font-medium' : ''}`}
           >
             <BookOpen size={16} />
-            Tutorials
+            Návody
           </a>
           <a
             href="#/attendance"
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${currentPage === '#/attendance' ? 'bg-gray-200 text-gray-900 font-medium' : ''}`}
           >
             <ClipboardList size={16} />
-            Attendance
+            Dochádzka
           </a>
         </nav>
       </div>
