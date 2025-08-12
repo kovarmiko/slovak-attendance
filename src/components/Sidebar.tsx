@@ -8,7 +8,7 @@ interface SidebarProps {
 
 export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
   return (
-    <aside className={`${classes.sidebar} ${isOpen ? classes.open : ''}`}>
+    <aside className={`${classes.sidebar} print:hidden ${isOpen ? classes.open : ''}`}>
       <div className={classes.sidebar__content}>
         <nav className='flex flex-col space-y-2 p-2'>
           <a

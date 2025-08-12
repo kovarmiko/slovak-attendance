@@ -6,7 +6,7 @@ interface HeaderProps {
 
 export default function Header({ onMenuClick }: HeaderProps) {
   return (
-    <header className='flex items-center bg-[#ffff99] p-4'>
+    <header className='flex items-center bg-[#ffff99] p-4 print:hidden'>
       <button
           onClick={onMenuClick}
           className='mr-2 text-gray-800'
