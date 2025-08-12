@@ -1,10 +1,11 @@
 import React from 'react';
+import classes from './About.module.scss';
 
 export default function About(): JSX.Element {
   return (
     <div className="flex items-center justify-center min-h-full bg-gradient-to-br from-blue-50 to-blue-100 py-10">
       <div className="max-w-xl w-full bg-white/90 border border-gray-200 rounded-lg shadow p-6 text-center space-y-4">
-        <img src="/favicon-32x32.png" alt="logo" className="w-16 h-16 mx-auto" />
+        <span className={`${classes.vsymbol} text-xl font-bold p-2`}>Vykazujeme</span>
         <h1 className="text-3xl md:text-4xl font-bold">Rýchlo. Intuitívne. Moderne.</h1>
         <p className="text-gray-700">
           Stránka <strong>vykazuje.me</strong> vám pomáha rýchlo, intuitívne a moderne vyplniť zamestnaneckú dochádzku.
