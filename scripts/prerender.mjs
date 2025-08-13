@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToStaticMarkup } from 'react-dom/server';
 import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -26,18 +26,20 @@ await mkdir(distDir, { recursive: true });
 for (const [name, url] of Object.entries(pages)) {
   const mod = await vite.ssrLoadModule(url);
   const Component = mod.default;
-  const body = renderToString(React.createElement(Component));
-  const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>${name}</title>
-</head>
-<body>
-  <div id="root">${body}</div>
-  <script>window.location.replace('/#/${name}');</script>
-</body>
-</html>`;
+  const body = renderToStaticMarkup(React.createElement(Component));
+  const title = name.charAt(0).toUpperCase() + name.slice(1);
+  const html = [
+    '<!DOCTYPE html>',
+    '<html lang="en">',
+    '<head>',
+    '  <meta charset="UTF-8" />',
+    `  <title>${title}</title>`,
+    '</head>',
+    '<body>',
+    body,
+    '</body>',
+    '</html>',
+  ].join('\n');
   await writeFile(path.join(distDir, `${name}.html`), html, 'utf8');
 }
 
