@@ -19,6 +19,7 @@ const pages = {
   faq: '/src/FAQ.tsx',
   tutorials: '/src/Tutorials.tsx',
   terms: '/src/Terms.tsx',
+  about: '/src/About.tsx',
 };
 
 await mkdir(distDir, { recursive: true });

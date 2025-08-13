@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://vykazuje.me/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://vykazuje.me/attendance.html</loc>
-    <changefreq>weekly</changefreq>
-    <priority>0.8</priority>
-  </url>
+<url><loc>https://vykazuje.me/</loc></url>
+  <url><loc>https://vykazuje.me/attendance</loc></url>
+  <url><loc>https://vykazuje.me/about</loc></url>
+  <url><loc>https://vykazuje.me/faq</loc></url>
+  <url><loc>https://vykazuje.me/tutorials</loc></url>
+  <url><loc>https://vykazuje.me/terms</loc></url>
 </urlset>
