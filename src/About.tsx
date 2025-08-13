@@ -13,9 +13,9 @@ export default function About(): JSX.Element {
           pripravené. Stačí sa len podpísať a vyklikať si dni, kedy ste nepracovali.
         </p>
         <p className="text-gray-700">
-          Pozrite si viac v <a href="#/tutorials" className="text-blue-600 hover:underline">návodoch</a> alebo rovno
-          prejdite na <a href="#/attendance" className="text-blue-600 hover:underline">dochádzku</a>. Ak vám nebude
-          niečo jasné, skúste <a href="#/faq" className="text-blue-600 hover:underline">časté otázky</a>.
+          Pozrite si viac v <a href="/tutorials" className="text-blue-600 hover:underline">návodoch</a> alebo rovno
+          prejdite na <a href="/attendance" className="text-blue-600 hover:underline">dochádzku</a>. Ak vám nebude
+          niečo jasné, skúste <a href="/faq" className="text-blue-600 hover:underline">časté otázky</a>.
         </p>
       </div>
     </div>

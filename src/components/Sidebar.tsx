@@ -12,9 +12,9 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
       <div className={classes.sidebar__content}>
         <nav className='flex flex-col space-y-2 p-2'>
           <a
-            href='#/about'
+            href='/about'
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
-              currentPage === '#/about'
+              currentPage === '/about'
                 ? 'bg-gray-200 text-gray-900 font-medium'
                 : ''
             }`}
@@ -23,9 +23,9 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
             Domov
           </a>
           <a
-            href='#/attendance'
+            href='/attendance'
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
-              currentPage === '#/attendance'
+              currentPage === '/attendance'
                 ? 'bg-gray-200 text-gray-900 font-medium'
                 : ''
             }`}
@@ -34,9 +34,9 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
             Dochádzka
           </a>
           <a
-            href='#/tutorials'
+            href='/tutorials'
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
-              currentPage === '#/tutorials'
+              currentPage === '/tutorials'
                 ? 'bg-gray-200 text-gray-900 font-medium'
                 : ''
             }`}
@@ -46,9 +46,9 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
           </a>
 
           <a
-            href='#/faq'
+            href='/faq'
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
-              currentPage === '#/faq'
+              currentPage === '/faq'
                 ? 'bg-gray-200 text-gray-900 font-medium'
                 : ''
             }`}
@@ -57,9 +57,9 @@ export default function Sidebar({ isOpen, currentPage }: SidebarProps) {
             Časté otázky
           </a>
           <a
-            href='#/terms'
+            href='/terms'
             className={`flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
-              currentPage === '#/terms'
+              currentPage === '/terms'
                 ? 'bg-gray-200 text-gray-900 font-medium'
                 : ''
             }`}
