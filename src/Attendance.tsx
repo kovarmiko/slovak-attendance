@@ -1,11 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import classes from './Attendance.module.scss';
-import {
-  TimeRecord,
-  ShiftType,
-  Summary,
-  VacationType,
-} from './types';
+import { TimeRecord, ShiftType, Summary, VacationType } from './types';
 import { HOLIDAYS_2025, defaultSummary } from './constants';
 import UserInfo from './components/UserInfo';
 import Controls from './components/Controls';
@@ -44,7 +39,9 @@ export default function Attendance(): JSX.Element {
   const workDates: string[] = useMemo(() => {
     const arr: string[] = [];
     for (let d = 1; d <= daysCount; d++) {
-      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(
+        d
+      ).padStart(2, '0')}`;
       const wd = new Date(year, month, d).getDay();
       if (wd >= 1 && wd <= 5 && !HOLIDAYS_2025.includes(iso)) arr.push(iso);
     }
@@ -53,7 +50,7 @@ export default function Attendance(): JSX.Element {
 
   const activeDates: string[] = useMemo(
     () => (shiftType === 'shortened' ? workDates.slice(0, 8) : workDates),
-    [workDates, shiftType],
+    [workDates, shiftType]
   );
   const activeSet = useMemo(() => new Set<string>(activeDates), [activeDates]);
 
@@ -64,7 +61,8 @@ export default function Attendance(): JSX.Element {
   useEffect(() => {
     const timesKeys = Object.keys(times);
     const needsReset =
-      timesKeys.length !== activeDates.length || !activeDates.every((k) => timesKeys.includes(k));
+      timesKeys.length !== activeDates.length ||
+      !activeDates.every((k) => timesKeys.includes(k));
 
     if (needsReset) {
       const newTimes: Record<string, TimeRecord> = {};
@@ -82,14 +80,20 @@ export default function Attendance(): JSX.Element {
   // Handlers
   const toggleVacation = (vacationOption: VacationType, checked: boolean) => {
     setVacations((prev) => {
-      const existing = Array.from(prev).find(({ key }) => key === vacationOption.key);
+      const existing = Array.from(prev).find(
+        ({ key }) => key === vacationOption.key
+      );
       if (existing) prev.delete(existing);
       if (checked) prev.add(vacationOption);
       return new Set(prev);
     });
   };
 
-  const handleTimeChange = (iso: string, field: keyof TimeRecord, value: string) => {
+  const handleTimeChange = (
+    iso: string,
+    field: keyof TimeRecord,
+    value: string
+  ) => {
     setTimes((prev) => ({
       ...prev,
       [iso]: { ...(prev[iso] || {}), [field]: value },
@@ -122,22 +126,10 @@ export default function Attendance(): JSX.Element {
 
   return (
     <div className={classes.attendance}>
-      <div className="flex items-center justify-center">
-        <h1 className="mt-2 text-3xl tracking-tight text-pretty">Dochádzka</h1>
-        <button
-          onClick={() => window.print()}
-          className="ml-4 bg-green-500 hover:bg-green-600 text-white font-medium py-2 px-4 rounded print:hidden"
-        >
-          Tlačiť
-        </button>
+      <div className='flex items-center justify-center'>
+        <h1 className='mt-2 text-3xl tracking-tight text-pretty'>Dochádzka</h1>
       </div>
-      <UserInfo
-        firstName={firstName}
-        lastName={lastName}
-        setFirstName={setFirstName}
-        setLastName={setLastName}
-      />
-      <div className={classes.period}>
+      <div className={`${classes.period} text-center`}>
         <label>Obdobie:</label>
         <span>
           {currentDate.toLocaleDateString('sk-SK', {
@@ -151,6 +143,12 @@ export default function Attendance(): JSX.Element {
         shiftType={shiftType}
         setShiftType={setShiftType}
         buttonClass={anotherMonthButtonClass}
+      />
+      <UserInfo
+        firstName={firstName}
+        lastName={lastName}
+        setFirstName={setFirstName}
+        setLastName={setLastName}
       />
       <div className='overflow-x-auto'>
         <AttendanceTable
@@ -166,7 +164,15 @@ export default function Attendance(): JSX.Element {
           outOfOfficeOptions={outOfOfficeOptions}
         />
       </div>
-      <SummaryDisplay summary={summary} shiftType={shiftType} />
+      <div className='flex justify-between pt-2'>
+        <button
+          onClick={() => window.print()}
+          className='bg-green-500 hover:bg-green-600 text-white font-medium py-0 px-2 rounded print:hidden'
+        >
+          Tlačiť
+        </button>
+        <SummaryDisplay summary={summary} shiftType={shiftType} />
+      </div>
     </div>
   );
 }
