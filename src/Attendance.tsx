@@ -13,6 +13,8 @@ export default function Attendance(): JSX.Element {
   const [shiftType, setShiftType] = useState<ShiftType>('regular');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
+  const [firstNameError, setFirstNameError] = useState<boolean>(false);
+  const [lastNameError, setLastNameError] = useState<boolean>(false);
   const [vacations, setVacations] = useState<Set<VacationType>>(new Set());
   const [times, setTimes] = useState<Record<string, TimeRecord>>({});
   const [summary, setSummary] = useState<Summary>({ ...defaultSummary });
@@ -100,6 +102,29 @@ export default function Attendance(): JSX.Element {
     }));
   };
 
+  useEffect(() => {
+    if (firstName) setFirstNameError(false);
+  }, [firstName]);
+
+  useEffect(() => {
+    if (lastName) setLastNameError(false);
+  }, [lastName]);
+
+  const handlePrint = () => {
+    const isFirstNameValid = firstName.trim().length > 0;
+    const isLastNameValid = lastName.trim().length > 0;
+    setFirstNameError(!isFirstNameValid);
+    setLastNameError(!isLastNameValid);
+    if (isFirstNameValid && isLastNameValid) {
+      window.print();
+    } else {
+      const el = document.getElementById(
+        !isFirstNameValid ? 'firstName' : 'lastName'
+      );
+      el?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  };
+
   // Summary calculation
   useEffect(() => {
     const summaryHolder: Summary = { ...defaultSummary };
@@ -149,6 +174,8 @@ export default function Attendance(): JSX.Element {
         lastName={lastName}
         setFirstName={setFirstName}
         setLastName={setLastName}
+        firstNameError={firstNameError}
+        lastNameError={lastNameError}
       />
       <div className='overflow-x-auto'>
         <AttendanceTable
@@ -166,7 +193,7 @@ export default function Attendance(): JSX.Element {
       </div>
       <div className='flex justify-between pt-2'>
         <button
-          onClick={() => window.print()}
+          onClick={handlePrint}
           className='bg-green-500 hover:bg-green-600 text-white font-medium py-0 px-2 rounded print:hidden'
         >
           Tlačiť
