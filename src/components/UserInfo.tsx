@@ -19,10 +19,10 @@ export default function UserInfo({
 }: Props) {
   return (
     <div className={classes.userInfo}>
-      <label className={`mr-2 ${classes.printOnly}`}>
+      <span className={`mr-2 ${classes.printOnly}`}>
         Meno a&nbsp;priezvisko:
-      </label>
-      <div className='inline-block mr-2'>
+      </span>
+      <div className='inline-block mr-2 print:hidden'>
         <input
           id='firstName'
           className={`w-full md:w-auto shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
@@ -40,7 +40,7 @@ export default function UserInfo({
           Povinné pole
         </p>
       </div>
-      <div className='inline-block mr-2'>
+      <div className='inline-block mr-2 print:hidden'>
         <input
           id='lastName'
           className={`w-full md:w-auto shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${

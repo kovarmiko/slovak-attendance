@@ -154,7 +154,7 @@ export default function Attendance(): JSX.Element {
       <div className='flex items-center justify-center'>
         <h1 className='mt-2 text-3xl tracking-tight text-pretty'>Dochádzka</h1>
       </div>
-      <div className={`${classes.period} text-center`}>
+      <div className={`${classes.period} text-center print:text-left`}>
         <label>Obdobie:</label>
         <span>
           {currentDate.toLocaleDateString('sk-SK', {
