@@ -6,6 +6,7 @@ import print from './assets/print_button.jpg';
 import reasonOut from './assets/reason_out_extended.jpg';
 import summary from './assets/summary.jpg';
 import timeSelected from './assets/time_selected.jpg';
+import Navigation from './components/Navigation';
 
 export default function Tutorials(): JSX.Element {
   return (
@@ -290,6 +291,7 @@ export default function Tutorials(): JSX.Element {
           </p>
         </section>
       </article>
+      <Navigation />
     </>
   );
 }

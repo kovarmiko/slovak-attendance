@@ -1,39 +1,42 @@
+import Navigation from './components/Navigation';
+
 export default function FAQ(): JSX.Element {
   return (
-    <article className='max-w-3xl mx-auto space-y-8 text-gray-800 leading-relaxed'>
-      <header className='space-y-2'>
-        <h1 className='text-3xl font-semibold tracking-tight'>Časté otázky</h1>
-        <p className='text-sm text-gray-500'>
-          Odpovede na najčastejšie otázky k nástroju.
-        </p>
-      </header>
+    <>
+      <article className='max-w-3xl mx-auto space-y-8 text-gray-800 leading-relaxed'>
+        <header className='space-y-2'>
+          <h1 className='text-3xl font-semibold tracking-tight'>Časté otázky</h1>
+          <p className='text-sm text-gray-500'>
+            Odpovede na najčastejšie otázky k nástroju.
+          </p>
+        </header>
 
-      <section className='space-y-2'>
-        <h2 className='text-xl font-semibold'>Ukladáte moje osobné údaje?</h2>
-        <p>
-          Nie. Všetko, čo na stránke zadáte, zostáva vo vašom prehliadači a
-          nikam sa neposiela. Znamená to, že vaše údaje nikdy neopustia vaše
-          zariadenie.
-        </p>
-      </section>
+        <section className='space-y-2'>
+          <h2 className='text-xl font-semibold'>Ukladáte moje osobné údaje?</h2>
+          <p>
+            Nie. Všetko, čo na stránke zadáte, zostáva vo vašom prehliadači a
+            nikam sa neposiela. Znamená to, že vaše údaje nikdy neopustia vaše
+            zariadenie.
+          </p>
+        </section>
 
-      <section className='space-y-2'>
-        <h2 className='text-xl font-semibold'>Je služba platená?</h2>
-        <p>
-          Služba je úplne bezplatná a nevyžaduje žiadne poplatky. Môžete ju
-          využívať neobmedzene bez akýchkoľvek záväzkov.
-        </p>
-      </section>
+        <section className='space-y-2'>
+          <h2 className='text-xl font-semibold'>Je služba platená?</h2>
+          <p>
+            Služba je úplne bezplatná a nevyžaduje žiadne poplatky. Môžete ju
+            využívať neobmedzene bez akýchkoľvek záväzkov.
+          </p>
+        </section>
 
-      <section className='space-y-2'>
-        <h2 className='text-xl font-semibold'>
-          Môžem si dochádzku uložiť na neskôr?
-        </h2>
-        <p>
-          Momentálne neponúkame možnosť uloženia dochádzky. Je potrebné si ju
-          vytlačiť alebo exportovať hneď po vyplnení, aby ste o údaje neprišli.
-        </p>
-      </section>
+        <section className='space-y-2'>
+          <h2 className='text-xl font-semibold'>
+            Môžem si dochádzku uložiť na neskôr?
+          </h2>
+          <p>
+            Momentálne neponúkame možnosť uloženia dochádzky. Je potrebné si ju
+            vytlačiť alebo exportovať hneď po vyplnení, aby ste o údaje neprišli.
+          </p>
+        </section>
 
       <section className='space-y-2'>
         <h2 className='text-xl font-semibold'>
@@ -142,6 +145,8 @@ export default function FAQ(): JSX.Element {
           tlači.
         </p>
       </section>
-    </article>
+      </article>
+      <Navigation />
+    </>
   );
 }
