@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function Navigation() {
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'auto' });
   };
 
   return (

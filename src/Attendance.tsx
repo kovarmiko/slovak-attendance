@@ -151,18 +151,20 @@ export default function Attendance(): JSX.Element {
 
   return (
     <div className={classes.attendance}>
-      <div className='flex items-center justify-center'>
-        <h1 className='mt-2 text-3xl tracking-tight text-pretty'>Dochádzka</h1>
-      </div>
-      <div className={`${classes.period} text-center print:text-left`}>
-        <label>Obdobie:</label>
-        <span>
-          {currentDate.toLocaleDateString('sk-SK', {
-            month: 'long',
-            year: 'numeric',
-          })}
-        </span>
-      </div>
+      <header>
+        <div className='flex items-center justify-center'>
+          <h1 className='text-3xl font-semibold tracking-tight'>Dochádzka</h1>
+        </div>
+        <div className={`${classes.period} text-center print:text-left`}>
+          <label>Obdobie:</label>
+          <span>
+            {currentDate.toLocaleDateString('sk-SK', {
+              month: 'long',
+              year: 'numeric',
+            })}
+          </span>
+        </div>
+      </header>
       <Controls
         setCurrentDate={setCurrentDate}
         shiftType={shiftType}
