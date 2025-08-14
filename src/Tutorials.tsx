@@ -22,7 +22,7 @@ export default function Tutorials(): JSX.Element {
         </header>
 
         {/* Pôvodné vysvetlenie sekcií */}
-        <section className='space-y-3'>
+        <section>
           <h2 className='text-2xl font-semibold'>Osobné údaje</h2>
           <img className='w-full md:w-6/12' src={names} alt='full name' />
           <p>
@@ -31,7 +31,7 @@ export default function Tutorials(): JSX.Element {
           </p>
         </section>
 
-        <section className='space-y-3'>
+        <section>
           <h2 className='text-2xl font-semibold'>Prepínanie mesiaca</h2>
           <img
             className='w-full md:w-6/12'
@@ -51,7 +51,7 @@ export default function Tutorials(): JSX.Element {
           </p>
         </section>
 
-        <section className='space-y-4'>
+        <section>
           <h2 className='text-2xl font-semibold'>Režimy dochádzky</h2>
           <img
             className='md:w-4/12 sm:w-6/12 w-8/12'
@@ -74,7 +74,7 @@ export default function Tutorials(): JSX.Element {
           </dl>
           <p
             role='note'
-            className='border-l-4 border-amber-400 bg-amber-50 p-4 text-amber-900'
+            className='border-l-4 border-amber-400 bg-amber-50 p-4 text-amber-900 mt-4'
           >
             <em>Skrátený režim neobsahuje údaje o obedoch.</em>
           </p>
@@ -95,7 +95,7 @@ export default function Tutorials(): JSX.Element {
           <img src={reasonOut} alt='select reason for being out' />
         </section>
 
-        <section className='space-y-3'>
+        <section>
           <h2 className='text-2xl font-semibold'>Súhrn a výpočet hodín</h2>
           <img
             className='w-full md:w-6/12'
@@ -109,7 +109,7 @@ export default function Tutorials(): JSX.Element {
           </p>
         </section>
 
-        <section className='space-y-3'>
+        <section>
           <h2 className='text-2xl font-semibold'>Tlač</h2>
           <img src={print} alt='print button' />
 
