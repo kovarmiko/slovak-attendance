@@ -14,7 +14,7 @@ export default function Tutorials(): JSX.Element {
       <article className='max-w-3xl mx-auto space-y-10 text-gray-800 leading-relaxed'>
         <header className='space-y-2'>
           <h1 className='text-3xl font-semibold tracking-tight'>
-            Úvod k ovládacím provkom na stránke
+            Úvod k ovládacím prvkom na stránke
           </h1>
           <p className='text-sm text-gray-500'>
             V tejto sekcii sa dočítate ako obsluhovať ovládacie prvky na stránke
@@ -246,7 +246,7 @@ export default function Tutorials(): JSX.Element {
           <h3 className='text-xl font-semibold'>Rýchle zmena časov</h3>
           <p>
             Šipkami nahor a nadol dokážete pridávať alebo uberať časové hodnoty
-            v prípade že ste na danom výbere. Spoznáťe to tak, že pole je
+            v prípade, že ste na danom výbere. Spoznáťe to tak, že pole je
             namodro podsvietené ako na nasledujúcom obrázku:
             <img
               className='w-full md:w-3/12'
