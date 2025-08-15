@@ -7,6 +7,7 @@ import reasonOut from './assets/reason_out_extended.jpg';
 import summary from './assets/summary.jpg';
 import timeSelected from './assets/time_selected.jpg';
 import Navigation from './components/Navigation';
+import AdUnit from './components/AdUnit';
 
 export default function Tutorials(): JSX.Element {
   return (
@@ -290,8 +291,9 @@ export default function Tutorials(): JSX.Element {
             rýchla, presná a ušetrí vám veľa času.
           </p>
         </section>
-      </article>
-      <Navigation />
-    </>
-  );
-}
+        </article>
+        <AdUnit />
+        <Navigation />
+      </>
+    );
+  }
