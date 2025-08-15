@@ -4,6 +4,7 @@ import About from './About';
 import FAQ from './FAQ';
 import Tutorials from './Tutorials';
 import Terms from './Terms';
+import Privacy from './Privacy';
 import Header from './components/Header';
 import Sidebar from './components/Sidebar';
 import Footer from './components/Footer';
@@ -30,6 +31,8 @@ function App() {
         return <Tutorials />;
       case '#/terms':
         return <Terms />;
+      case '#/privacy':
+        return <Privacy />;
       case '#/attendance':
       default:
         return <Attendance />;
