@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { utils, writeFile } from 'xlsx';
 import classes from './Attendance.module.scss';
 import { TimeRecord, ShiftType, Summary, VacationType } from './types';
 import { HOLIDAYS_2025, defaultSummary } from './constants';
@@ -125,7 +126,7 @@ export default function Attendance(): JSX.Element {
     }
   };
 
-  const handleDownloadCSV = () => {
+  const buildExportData = () => {
     const header = [
       'Deň',
       'Dátum',
@@ -138,7 +139,9 @@ export default function Attendance(): JSX.Element {
     const rows: string[][] = [];
 
     for (let d = 1; d <= daysCount; d++) {
-      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(
+        d
+      ).padStart(2, '0')}`;
       const dt = new Date(year, month, d);
       const wd = dt.getDay();
       const isHoliday = HOLIDAYS_2025.includes(iso);
@@ -176,7 +179,11 @@ export default function Attendance(): JSX.Element {
         ]);
       }
     }
+    return { header, rows };
+  };
 
+  const handleDownloadCSV = () => {
+    const { header, rows } = buildExportData();
     const csv = [header, ...rows]
       .map((r) => r.map((s) => `"${s.replace(/"/g, '""')}"`).join(','))
       .join('\n');
@@ -189,6 +196,14 @@ export default function Attendance(): JSX.Element {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadExcel = () => {
+    const { header, rows } = buildExportData();
+    const wb = utils.book_new();
+    const ws = utils.aoa_to_sheet([header, ...rows]);
+    utils.book_append_sheet(wb, ws, 'Attendance');
+    writeFile(wb, `attendance_${month + 1}_${year}.xlsx`);
   };
 
   // Summary calculation
@@ -272,6 +287,12 @@ export default function Attendance(): JSX.Element {
             className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-0 px-2 rounded'
           >
             Download CSV
+          </button>
+          <button
+            onClick={handleDownloadExcel}
+            className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-0 px-2 rounded'
+          >
+            Download Excel
           </button>
         </div>
         <SummaryDisplay summary={summary} shiftType={shiftType} />
