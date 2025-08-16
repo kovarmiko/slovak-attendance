@@ -41,6 +41,11 @@ const pages = {
     title: 'Vykazujeme – Podmienky',
     description: 'Podmienky používania služby Vykazujeme.',
   },
+  attendance: {
+    url: '/src/Attendance.tsx',
+    title: 'Vykazujeme – Dochádza',
+    description: 'Jednoduchý nástroj na generovanie a evidenciu pracovnej dochádzky.',
+  },
 };
 
 await mkdir(distDir, { recursive: true });
