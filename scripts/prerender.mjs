@@ -64,7 +64,6 @@ for (const [name, { url, title, description }] of Object.entries(pages)) {
       React.createElement(Component)
     )
   );
-  const redirect = name === 'index' ? 'about' : name;
   const html = template
     .replace(/<title>.*?<\/title>/, `<title>${title}</title>`)
     .replace(
@@ -79,10 +78,7 @@ for (const [name, { url, title, description }] of Object.entries(pages)) {
       /<meta[^>]*property="og:description"[^>]*>/,
       `<meta property="og:description" content="${description}">`
     )
-    .replace(
-      '<div id="root"></div>',
-      `<div id="root">${body}</div><script>window.location.replace('/#/${redirect}');</script>`
-    );
+    .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
 
   const pageDir = name === 'index' ? distDir : path.join(distDir, name);
   await mkdir(pageDir, { recursive: true });

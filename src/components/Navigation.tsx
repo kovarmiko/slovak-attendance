@@ -8,35 +8,35 @@ export default function Navigation() {
   return (
     <nav className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
       <a
-        href="#/about"
+        href="/about"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >
         Domov
       </a>
       <a
-        href="#/attendance"
+        href="/attendance"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >
         Dochádzka
       </a>
       <a
-        href="#/tutorials"
+        href="/tutorials"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >
         Návody
       </a>
       <a
-        href="#/faq"
+        href="/faq"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >
         Časté otázky
       </a>
       <a
-        href="#/terms"
+        href="/terms"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >
