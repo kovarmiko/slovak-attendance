@@ -125,6 +125,72 @@ export default function Attendance(): JSX.Element {
     }
   };
 
+  const handleDownloadCSV = () => {
+    const header = [
+      'Deň',
+      'Dátum',
+      'Mimo práce',
+      'Príchod',
+      'Odchod',
+      'Obed Odchod',
+      'Obed Príchod',
+    ];
+    const rows: string[][] = [];
+
+    for (let d = 1; d <= daysCount; d++) {
+      const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+      const dt = new Date(year, month, d);
+      const wd = dt.getDay();
+      const isHoliday = HOLIDAYS_2025.includes(iso);
+      const isWeekend = wd === 0 || wd === 6;
+      const dayName = dt.toLocaleDateString('sk-SK', { weekday: 'long' });
+      const dateDM = `${d}.${month + 1}.`;
+
+      if (isWeekend) {
+        rows.push([dayName, dateDM, '', '', '', '', '']);
+        continue;
+      }
+      if (isHoliday) {
+        rows.push([dayName, dateDM, '', 'Štátny sviatok', '', '', '']);
+        continue;
+      }
+
+      const vacation = Array.from(vacations).find(({ key }) => key === iso);
+      const rec = times[iso] || {};
+
+      if (vacation) {
+        const label =
+          outOfOfficeOptions
+            .flatMap((o) => Object.entries(o))
+            .find(([k]) => k === vacation.value)?.[1] || '';
+        rows.push([dayName, dateDM, label as string, '', '', '', '']);
+      } else {
+        rows.push([
+          dayName,
+          dateDM,
+          '',
+          rec.in || '',
+          rec.out || '',
+          shiftType === 'regular' ? '12:00' : '',
+          shiftType === 'regular' ? '12:40' : '',
+        ]);
+      }
+    }
+
+    const csv = [header, ...rows]
+      .map((r) => r.map((s) => `"${s.replace(/"/g, '""')}"`).join(','))
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `attendance_${month + 1}_${year}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   // Summary calculation
   useEffect(() => {
     const summaryHolder: Summary = { ...defaultSummary };
@@ -194,12 +260,20 @@ export default function Attendance(): JSX.Element {
         />
       </div>
       <div className='flex justify-between pt-2'>
-        <button
-          onClick={handlePrint}
-          className='bg-green-500 hover:bg-green-600 text-white font-medium py-0 px-2 rounded print:hidden'
-        >
-          Tlačiť
-        </button>
+        <div className='space-x-2 print:hidden'>
+          <button
+            onClick={handlePrint}
+            className='bg-green-500 hover:bg-green-600 text-white font-medium py-0 px-2 rounded'
+          >
+            Tlačiť
+          </button>
+          <button
+            onClick={handleDownloadCSV}
+            className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-0 px-2 rounded'
+          >
+            Download CSV
+          </button>
+        </div>
         <SummaryDisplay summary={summary} shiftType={shiftType} />
       </div>
     </div>
