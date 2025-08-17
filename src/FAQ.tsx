@@ -94,12 +94,13 @@ export default function FAQ(): JSX.Element {
 
       <section className='space-y-2'>
         <h2 className='text-xl font-semibold'>
-          Je možné exportovať dochádzku do Excelu?
+          Je možné exportovať dochádzku do CSV alebo Excelu?
         </h2>
         <p>
-          Momentálne nástroj podporuje len tlač do PDF alebo priamo na papier.
-          Export do Excelu zatiaľ nie je k dispozícii, ale je v pláne ako budúca
-          funkcia.
+          Áno. Vedľa tlačidla <kbd>Tlačiť</kbd> nájdete aj možnosti
+          <kbd>Download CSV</kbd> a <kbd>Download Excel</kbd>. Tieto tlačidlá
+          vám umožnia uložiť vyplnenú dochádzku do súboru na vašom zariadení,
+          ktorý si môžete neskôr otvoriť v tabuľkovom procesore.
         </p>
       </section>
 
