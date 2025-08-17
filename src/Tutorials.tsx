@@ -122,6 +122,15 @@ export default function Tutorials(): JSX.Element {
             pre náhľad a uloženie alebo tlač.
           </p>
         </section>
+
+        <section>
+          <h2 className='text-2xl font-semibold'>Stiahnutie do CSV alebo Excelu</h2>
+          <p>
+            Vedľa tlačidla <kbd>Tlačiť</kbd> nájdete aj možnosti
+            <kbd>Download CSV</kbd> a <kbd>Download Excel</kbd>, ktoré umožnia
+            exportovať vyplnenú dochádzku do súboru pre ďalšie spracovanie.
+          </p>
+        </section>
       </article>
 
       <article className='max-w-3xl mx-auto space-y-10 text-gray-800 leading-relaxed mt-8'>
@@ -209,11 +218,12 @@ export default function Tutorials(): JSX.Element {
             súhrne.
           </p>
 
-          <h3 className='text-xl font-semibold'>Krok 7: Tlač alebo uloženie</h3>
+          <h3 className='text-xl font-semibold'>Krok 7: Tlač alebo stiahnutie</h3>
           <p>
-            Po dokončení kliknite na tlačidlo <kbd>Tlačiť</kbd>. Prehliadač
-            otvorí náhľad tlače, kde môžete dokument priamo vytlačiť alebo
-            uložiť ako PDF.
+            Po dokončení kliknite na tlačidlo <kbd>Tlačiť</kbd> pre náhľad a
+            prípadnú tlač. Ak chcete pracovať s údajmi ďalej, použite tlačidlá
+            <kbd>Download CSV</kbd> alebo <kbd>Download Excel</kbd>, ktoré vám
+            stiahnu dochádzku do súboru vo zvolenom formáte.
           </p>
 
           <p>
