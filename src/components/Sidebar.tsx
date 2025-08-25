@@ -12,7 +12,7 @@ export default function Sidebar({ isOpen }: SidebarProps) {
       <div className={classes.sidebar__content}>
         <nav className='flex flex-col space-y-2 p-2'>
           <NavLink
-            to='/about'
+            to='/'
             className={({ isActive }) =>
               `flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
                 isActive ? 'bg-gray-200 text-gray-900 font-medium' : ''
