@@ -8,7 +8,7 @@ export default function Navigation() {
   return (
     <nav className="mt-12 flex flex-wrap justify-center gap-4 text-sm">
       <a
-        href="/about"
+        href="/"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
       >

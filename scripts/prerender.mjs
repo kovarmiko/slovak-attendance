@@ -21,11 +21,6 @@ const pages = {
     title: 'Vykazujeme – O projekte',
     description: 'Informácie o projekte Vykazujeme.',
   },
-  about: {
-    url: '/src/About.tsx',
-    title: 'Vykazujeme – O projekte',
-    description: 'Informácie o projekte Vykazujeme.',
-  },
   faq: {
     url: '/src/FAQ.tsx',
     title: 'Vykazujeme – FAQ',
