@@ -17,26 +17,31 @@ const vite = await createServer({
 // Component entry points and metadata for routes we want to prerender
 const pages = {
   index: {
+    path: '/',
     url: '/src/About.tsx',
     title: 'Vykazujeme – O projekte',
     description: 'Informácie o projekte Vykazujeme.',
   },
   faq: {
+    path: '/faq',
     url: '/src/FAQ.tsx',
     title: 'Vykazujeme – FAQ',
     description: 'Často kladené otázky k službe Vykazujeme.',
   },
   tutorials: {
+    path: '/tutorials',
     url: '/src/Tutorials.tsx',
     title: 'Vykazujeme – Tutoriály',
     description: 'Návody na používanie služby Vykazujeme.',
   },
   terms: {
+    path: '/terms',
     url: '/src/Terms.tsx',
     title: 'Vykazujeme – Podmienky',
     description: 'Podmienky používania služby Vykazujeme.',
   },
   attendance: {
+    path: '/attendance',
     url: '/src/Attendance.tsx',
     title: 'Vykazujeme – Dochádza',
     description: 'Vykazujeme – jednoduchý nástroj na generovanie a evidenciu pracovnej dochádzky.',
@@ -50,7 +55,7 @@ const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 
 const Navigation = (await vite.ssrLoadModule('/src/components/Navigation.tsx')).default;
 
-for (const [name, { url, title, description }] of Object.entries(pages)) {
+for (const [name, { url, title, description, path: pagePath }] of Object.entries(pages)) {
   // clean up legacy flat html files
   await rm(path.join(distDir, `${name}.html`), { force: true }).catch(() => {});
 
@@ -77,6 +82,10 @@ for (const [name, { url, title, description }] of Object.entries(pages)) {
     .replace(
       /<meta[^>]*property="og:description"[^>]*>/,
       `<meta property="og:description" content="${description}">`
+    )
+    .replace(
+      /<link[^>]*rel="canonical"[^>]*>/,
+      `<link rel="canonical" href="https://vykazuje.me${pagePath}" />`
     )
     .replace('<div id="root"></div>', `<div id="root">${body}</div>`);
 
