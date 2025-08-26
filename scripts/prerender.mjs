@@ -39,7 +39,7 @@ const pages = {
   attendance: {
     url: '/src/Attendance.tsx',
     title: 'Vykazujeme – Dochádza',
-    description: 'Jednoduchý nástroj na generovanie a evidenciu pracovnej dochádzky.',
+    description: 'Vykazujeme – jednoduchý nástroj na generovanie a evidenciu pracovnej dochádzky.',
   },
 };
 
