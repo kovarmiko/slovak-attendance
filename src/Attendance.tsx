@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { utils, writeFile } from 'xlsx';
 import classes from './Attendance.module.scss';
 import { TimeRecord, ShiftType, Summary, VacationType } from './types';
-import { HOLIDAYS_2025, defaultSummary } from './constants';
+import { getHolidays, defaultSummary } from './constants';
 import UserInfo from './components/UserInfo';
 import Controls from './components/Controls';
 import AttendanceTable from './components/AttendanceTable';
@@ -46,7 +46,8 @@ export default function Attendance(): JSX.Element {
         d
       ).padStart(2, '0')}`;
       const wd = new Date(year, month, d).getDay();
-      if (wd >= 1 && wd <= 5 && !HOLIDAYS_2025.includes(iso)) arr.push(iso);
+      const HOLIDAYS = getHolidays(year);
+      if (wd >= 1 && wd <= 5 && !HOLIDAYS.includes(iso)) arr.push(iso);
     }
     return arr;
   }, [year, month, daysCount]);
@@ -160,7 +161,8 @@ export default function Attendance(): JSX.Element {
       ).padStart(2, '0')}`;
       const dt = new Date(year, month, d);
       const wd = dt.getDay();
-      const isHoliday = HOLIDAYS_2025.includes(iso);
+      const HOLIDAYS = getHolidays(year);
+      const isHoliday = HOLIDAYS.includes(iso);
       const isWeekend = wd === 0 || wd === 6;
       const dayName = dt.toLocaleDateString('sk-SK', { weekday: 'long' });
       const dateDM = `${d}.${month + 1}.`;

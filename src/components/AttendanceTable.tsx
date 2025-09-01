@@ -4,7 +4,7 @@ import {
   VacationType,
   TimeRecord,
 } from '../types';
-import { HOLIDAYS_2025 } from '../constants';
+import { getHolidays } from '../constants';
 import React from 'react';
 import classes from './AttendanceTable.module.scss';
 
@@ -59,7 +59,8 @@ export default function AttendanceTable({
           const iso = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
           const dt = new Date(year, month, d);
           const wd = dt.getDay();
-          const isHoliday = HOLIDAYS_2025.includes(iso);
+          const HOLIDAYS = getHolidays(year);
+          const isHoliday = HOLIDAYS.includes(iso);
           const isWeekend = wd === 0 || wd === 6;
           const dateDM = formatDM(dt);
 
