@@ -73,6 +73,7 @@ export default function Attendance(): JSX.Element {
         newTimes[iso] = {
           in: '07:00',
           out: shiftType === 'regular' ? '15:40' : '12:00',
+          lunchMinutes: shiftType === 'regular' ? 40 : undefined,
         };
       });
       setTimes(newTimes);
@@ -101,6 +102,21 @@ export default function Attendance(): JSX.Element {
       ...prev,
       [iso]: { ...(prev[iso] || {}), [field]: value },
     }));
+  };
+
+  const handleLunchChange = (iso: string, lunchMinutes: number) => {
+    setTimes((prev) => {
+      const rec = prev[iso] || {};
+      const next: TimeRecord = { ...rec, lunchMinutes };
+      if (rec.in) {
+        const [inH, inM] = rec.in.split(':').map(Number);
+        const total = inH * 60 + inM + 8 * 60 + lunchMinutes; // 8h work + lunch
+        const outH = Math.floor((total % (24 * 60)) / 60);
+        const outM = total % 60;
+        next.out = `${String(outH).padStart(2, '0')}:${String(outM).padStart(2, '0')}`;
+      }
+      return { ...prev, [iso]: next };
+    });
   };
 
   useEffect(() => {
@@ -175,7 +191,9 @@ export default function Attendance(): JSX.Element {
           rec.in || '',
           rec.out || '',
           shiftType === 'regular' ? '12:00' : '',
-          shiftType === 'regular' ? '12:40' : '',
+          shiftType === 'regular'
+            ? `${String(12 + Math.floor((rec.lunchMinutes ?? 40) / 60)).padStart(2, '0')}:${String((rec.lunchMinutes ?? 40) % 60).padStart(2, '0')}`
+            : '',
         ]);
       }
     }
@@ -270,6 +288,7 @@ export default function Attendance(): JSX.Element {
           toggleVacation={toggleVacation}
           times={times}
           handleTimeChange={handleTimeChange}
+          handleLunchChange={handleLunchChange}
           shiftType={shiftType}
           outOfOfficeOptions={outOfOfficeOptions}
         />

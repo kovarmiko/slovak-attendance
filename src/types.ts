@@ -1,6 +1,7 @@
 export interface TimeRecord {
   in?: string;
   out?: string;
+  lunchMinutes?: number;
 }
 
 export type ShiftType = 'regular' | 'shortened';

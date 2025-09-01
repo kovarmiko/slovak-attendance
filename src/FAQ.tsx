@@ -44,8 +44,14 @@ export default function FAQ(): JSX.Element {
           Aké prestávky na obed sú podporované?
         </h2>
         <p>
-          Aktuálne je podporovaná iba 40-minútová prestávka na obed. Tento čas
-          sa automaticky odpočítava z celkového počtu odpracovaných hodín.
+          V <strong>štandardnom móde</strong> si viete pre každý pracovný deň vybrať
+          dĺžku obeda: <strong>30</strong>, <strong>40</strong>, <strong>50</strong> alebo
+          <strong>60</strong> minút. Predvolene je nastavených 40 minút. Zvolená dĺžka sa
+          započíta do času odchodu tak, aby pracovný čas zostal 8 hodín.
+        </p>
+        <p className='text-gray-700'>
+          Pri tlači sa samotný výber (rozbaľovacie menu) <strong>nezobrazuje</strong>,
+          viditeľný je iba výsledný čas návratu z obeda.
         </p>
       </section>
 
@@ -85,9 +91,9 @@ export default function FAQ(): JSX.Element {
           Ako sa počítajú odpracované hodiny?
         </h2>
         <p>
-          Hodiny sa počítajú od času príchodu po čas odchodu mínus 40-minútová
-          prestávka na obed. Pri skrátenom režime sa automaticky obmedzuje počet
-          pracovných dní podľa legislatívy. Súhrn sa vždy prepočíta pri
+          Hodiny sa počítajú od času príchodu po čas odchodu mínus
+          <strong> zvolená dĺžka prestávky na obed</strong> (30/40/50/60 min v štandardnom móde).
+          V skrátenom režime sa obedy nezohľadňujú. Súhrn sa vždy prepočíta pri
           akejkoľvek zmene v tabuľke.
         </p>
       </section>

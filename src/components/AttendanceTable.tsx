@@ -21,6 +21,7 @@ interface Props {
     field: keyof TimeRecord,
     value: string,
   ) => void;
+  handleLunchChange: (iso: string, lunchMinutes: number) => void;
   shiftType: ShiftType;
   outOfOfficeOptions: Array<Partial<Record<keyof Summary, string>>>;
 }
@@ -36,6 +37,7 @@ export default function AttendanceTable({
   toggleVacation,
   times,
   handleTimeChange,
+  handleLunchChange,
   shiftType,
   outOfOfficeOptions,
 }: Props) {
@@ -119,7 +121,25 @@ export default function AttendanceTable({
                   {shiftType === 'regular' ? (
                     <>
                       <td>12:00</td>
-                      <td>12:40</td>
+                      <td>
+                        <div className='flex items-center justify-center gap-2'>
+                          <span>
+                            {`${String(12 + Math.floor((rec.lunchMinutes ?? 40) / 60)).padStart(2, '0')}:${String((rec.lunchMinutes ?? 40) % 60).padStart(2, '0')}`}
+                          </span>
+                          <select
+                            className='print:hidden border rounded px-1 py-0.5'
+                            value={rec.lunchMinutes ?? 40}
+                            onChange={(e) =>
+                              handleLunchChange(iso, Number(e.target.value))
+                            }
+                            disabled={!active}
+                          >
+                            {[30, 40, 50, 60].map((m) => (
+                              <option key={m} value={m}>{m} min</option>
+                            ))}
+                          </select>
+                        </div>
+                      </td>
                     </>
                   ) : (
                     <>

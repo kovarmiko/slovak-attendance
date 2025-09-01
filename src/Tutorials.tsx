@@ -97,6 +97,25 @@ export default function Tutorials(): JSX.Element {
         </section>
 
         <section>
+          <h2 className='text-2xl font-semibold'>Nastavenie dĺžky obeda</h2>
+          <p>
+            V <strong>štandardnom móde</strong> môžete pri každom pracovnom dni
+            zvoliť dĺžku prestávky na obed: <strong>30</strong>, <strong>40</strong>,
+            <strong>50</strong> alebo <strong>60</strong> minút. Výber sa nachádza v
+            stĺpci <em>Obed Príchod</em> priamo vedľa zobrazeného času návratu z obeda.
+          </p>
+          <p>
+            Po zmene dĺžky obeda sa automaticky prepočíta čas <em>Odchod</em> tak,
+            aby pracovný čas zostal 8 hodín <em>plus</em> zvolená prestávka. Pri tlači
+            sa rozbaľovacie menu pre dĺžku obeda <strong>nezobrazuje</strong> – v náhľade
+            je viditeľný len výsledný čas.
+          </p>
+          <p className='text-sm text-gray-600'>
+            Poznámka: <em>Skrátený mód</em> prestávky na obed neobsahuje.
+          </p>
+        </section>
+
+        <section>
           <h2 className='text-2xl font-semibold'>Súhrn a výpočet hodín</h2>
           <img
             className='w-full md:w-6/12'
