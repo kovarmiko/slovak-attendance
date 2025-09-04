@@ -1,56 +1,163 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  ConsentState,
+  defaultConsent,
+  readConsent,
+  saveConsent,
+} from '../lib/consent';
 
 export default function CookieConsent() {
-  const [visible, setVisible] = useState(false);
+  const existing = useMemo(() => readConsent(), []);
+  const [visible, setVisible] = useState(!existing);
+  const [customizing, setCustomizing] = useState(false);
+  const [state, setState] = useState<ConsentState>(existing || defaultConsent);
 
   useEffect(() => {
-    const checkConsent = async () => {
-      const consent = localStorage.getItem('cookie-consent');
-      if (consent) {
-        return;
-      }
-
-      try {
-        const res = await fetch('https://ipapi.co/json/');
-        const data = await res.json();
-        if (data?.in_eu) {
-          setVisible(true);
-        }
-      } catch (err) {
-        console.error('Failed to determine EU status', err);
-      }
-    };
-
-    checkConsent();
+    const open = () => setVisible(true);
+    window.addEventListener('openConsent', open);
+    return () => window.removeEventListener('openConsent', open);
   }, []);
 
-  const accept = () => {
-    localStorage.setItem('cookie-consent', 'true');
+  // If a certified CMP is present, hide custom banner to avoid duplicates
+  useEffect(() => {
+    const w = window as any;
+    if (typeof w.__tcfapi === 'function') {
+      setVisible(false);
+    }
+  }, []);
+
+  const acceptAll = () => {
+    const next: ConsentState = {
+      ad_storage: 'granted',
+      ad_user_data: 'granted',
+      ad_personalization: 'granted',
+      analytics_storage: 'granted',
+    };
+    saveConsent(next);
     setVisible(false);
   };
 
-  if (!visible) {
-    return null;
-  }
+  const rejectAll = () => {
+    saveConsent({ ...defaultConsent });
+    setVisible(false);
+  };
+
+  const saveCustom = () => {
+    saveConsent(state);
+    setVisible(false);
+    setCustomizing(false);
+  };
+
+  if (!visible) return null;
 
   return (
-    <div className='fixed bottom-0 left-0 w-full bg-gray-800 text-white text-sm p-4 flex flex-col sm:flex-row items-center justify-center gap-2 z-50'>
-      <span>
-        This site uses advertisement/marketing cookies. By using this site, you agree to their use.
-      </span>
-      <button
-        onClick={() => window.open('https://support.google.com/adsense/answer/7549925?hl=en', '_blank')}
-        className='bg-gray-700 text-white px-4 py-1 rounded'
-      >
-        Learn more
-      </button>
-      <button
-        onClick={accept}
-        className='bg-white text-gray-800 px-4 py-1 rounded'
-      >
-        Accept
-      </button>
+    <div className='fixed bottom-0 left-0 w-full bg-gray-900 text-white text-sm p-4 z-50 shadow-lg'>
+      <div className='max-w-5xl mx-auto flex flex-col gap-3'>
+        <div className='flex flex-col gap-2'>
+          <span className='font-medium'>Nastavenia súborov cookie</span>
+          <p className='text-gray-200'>
+            Používame súbory cookie na základné fungovanie webu a, s vaším
+            súhlasom, aj na analýzu a zobrazovanie reklám (Google AdSense).
+            Vaše voľby môžete kedykoľvek zmeniť v časti „Nastavenia cookies“.
+          </p>
+        </div>
+
+        {customizing ? (
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-800/70 p-3 rounded'>
+            <fieldset className='space-y-2'>
+              <legend className='font-medium'>Reklama</legend>
+              <label className='flex items-center gap-2'>
+                <input
+                  type='checkbox'
+                  checked={state.ad_storage === 'granted'}
+                  onChange={(e) =>
+                    setState((s) => ({ ...s, ad_storage: e.target.checked ? 'granted' : 'denied' }))
+                  }
+                />
+                Ukladanie pre reklamy
+              </label>
+              <label className='flex items-center gap-2'>
+                <input
+                  type='checkbox'
+                  checked={state.ad_user_data === 'granted'}
+                  onChange={(e) =>
+                    setState((s) => ({ ...s, ad_user_data: e.target.checked ? 'granted' : 'denied' }))
+                  }
+                />
+                Údaje používateľa pre reklamy
+              </label>
+              <label className='flex items-center gap-2'>
+                <input
+                  type='checkbox'
+                  checked={state.ad_personalization === 'granted'}
+                  onChange={(e) =>
+                    setState((s) => ({ ...s, ad_personalization: e.target.checked ? 'granted' : 'denied' }))
+                  }
+                />
+                Personalizácia reklám
+              </label>
+            </fieldset>
+            <fieldset className='space-y-2'>
+              <legend className='font-medium'>Analytika</legend>
+              <label className='flex items-center gap-2'>
+                <input
+                  type='checkbox'
+                  checked={state.analytics_storage === 'granted'}
+                  onChange={(e) =>
+                    setState((s) => ({ ...s, analytics_storage: e.target.checked ? 'granted' : 'denied' }))
+                  }
+                />
+                Analytické cookies
+              </label>
+            </fieldset>
+          </div>
+        ) : null}
+
+        <div className='flex flex-wrap gap-2 justify-end'>
+          {!customizing ? (
+            <>
+              <button
+                onClick={rejectAll}
+                className='bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded'
+              >
+                Odmietnuť všetko
+              </button>
+              <button
+                onClick={() => setCustomizing(true)}
+                className='bg-white text-gray-900 hover:bg-gray-100 px-4 py-1 rounded'
+              >
+                Prispôsobiť
+              </button>
+              <button
+                onClick={acceptAll}
+                className='bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded'
+              >
+                Prijať všetko
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => setCustomizing(false)}
+                className='bg-gray-700 hover:bg-gray-600 text-white px-4 py-1 rounded'
+              >
+                Späť
+              </button>
+              <button
+                onClick={saveCustom}
+                className='bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded'
+              >
+                Uložiť voľby
+              </button>
+            </>
+          )}
+        </div>
+
+        <div className='text-xs text-gray-300'>
+          Viac informácií v časti{' '}
+          <a href='/privacy' className='underline'>Ochrana súkromia</a>.
+        </div>
+      </div>
     </div>
   );
 }
-

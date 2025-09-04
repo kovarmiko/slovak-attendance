@@ -1,4 +1,4 @@
-import { HelpCircle, BookOpen, ClipboardList, Home, FileText, Shield } from 'lucide-react';
+import { HelpCircle, BookOpen, ClipboardList, Home, FileText, Shield, Mail } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import classes from './Sidebar.module.scss';
 
@@ -44,6 +44,17 @@ export default function Sidebar({ isOpen }: SidebarProps) {
             <BookOpen size={16} />
             Návody
           </NavLink>
+          <NavLink
+            to='/guides'
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
+                isActive ? 'bg-gray-200 text-gray-900 font-medium' : ''
+              }`
+            }
+          >
+            <BookOpen size={16} />
+            Články
+          </NavLink>
 
           <NavLink
             to='/faq'
@@ -77,6 +88,19 @@ export default function Sidebar({ isOpen }: SidebarProps) {
           >
             <Shield size={16} />
             Ochrana súkromia
+          </NavLink>
+        </nav>
+        <nav className='flex flex-col space-y-2 p-2 border-t mt-2 pt-2'>
+          <NavLink
+            to='/contact'
+            className={({ isActive }) =>
+              `flex items-center gap-2 px-2 py-1 rounded no-underline text-gray-700 hover:text-gray-900 hover:bg-gray-100 ${
+                isActive ? 'bg-gray-200 text-gray-900 font-medium' : ''
+              }`
+            }
+          >
+            <Mail size={16} />
+            Kontakt
           </NavLink>
         </nav>
       </div>

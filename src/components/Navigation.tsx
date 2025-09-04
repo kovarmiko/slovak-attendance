@@ -29,6 +29,13 @@ export default function Navigation() {
         Návody
       </a>
       <a
+        href="/guides"
+        onClick={scrollToTop}
+        className="text-blue-600 hover:underline"
+      >
+        Články
+      </a>
+      <a
         href="/faq"
         onClick={scrollToTop}
         className="text-blue-600 hover:underline"
@@ -41,6 +48,20 @@ export default function Navigation() {
         className="text-blue-600 hover:underline"
       >
         Podmienky používania
+      </a>
+      <a
+        href="/privacy"
+        onClick={scrollToTop}
+        className="text-blue-600 hover:underline"
+      >
+        Ochrana súkromia
+      </a>
+      <a
+        href="/contact"
+        onClick={scrollToTop}
+        className="text-blue-600 hover:underline"
+      >
+        Kontakt
       </a>
     </nav>
   );
