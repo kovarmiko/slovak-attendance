@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// Using plain anchors to keep prerender SSR simple (no Router context needed)
 
 const guides = [
   {
@@ -65,9 +65,9 @@ export default function Guides(): JSX.Element {
         {guides.map((g) => (
           <li key={g.path} className='border rounded p-4 hover:bg-gray-50'>
             <h2 className='text-xl font-medium'>
-              <Link to={g.path} className='text-blue-700 hover:underline'>
+              <a href={g.path} className='text-blue-700 hover:underline'>
                 {g.title}
-              </Link>
+              </a>
             </h2>
             <p className='text-gray-700'>{g.blurb}</p>
           </li>
@@ -76,4 +76,3 @@ export default function Guides(): JSX.Element {
     </div>
   );
 }
-

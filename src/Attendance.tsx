@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { utils, writeFile } from 'xlsx';
 import classes from './Attendance.module.scss';
 import { TimeRecord, ShiftType, Summary, VacationType } from './types';
 import { getHolidays, defaultSummary } from './constants';
@@ -218,12 +217,13 @@ export default function Attendance(): JSX.Element {
     URL.revokeObjectURL(url);
   };
 
-  const handleDownloadExcel = () => {
+  const handleDownloadExcel = async () => {
     const { header, rows } = buildExportData();
-    const wb = utils.book_new();
-    const ws = utils.aoa_to_sheet([header, ...rows]);
-    utils.book_append_sheet(wb, ws, 'Attendance');
-    writeFile(wb, `attendance_${month + 1}_${year}.xlsx`);
+    const xlsx = await import('xlsx');
+    const wb = xlsx.utils.book_new();
+    const ws = xlsx.utils.aoa_to_sheet([header, ...rows]);
+    xlsx.utils.book_append_sheet(wb, ws, 'Attendance');
+    xlsx.writeFile(wb, `attendance_${month + 1}_${year}.xlsx`);
   };
 
   // Summary calculation
