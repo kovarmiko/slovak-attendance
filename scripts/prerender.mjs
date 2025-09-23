@@ -122,8 +122,17 @@ const template = await readFile(path.join(distDir, 'index.html'), 'utf8');
 const Navigation = (await vite.ssrLoadModule('/src/components/Navigation.tsx')).default;
 
 for (const [name, { url, title, description, path: pagePath }] of Object.entries(pages)) {
-  // clean up legacy flat html files
+  const routePath = pagePath === '/' ? '' : pagePath.replace(/^\/+/, '');
+  const targetDir = routePath ? path.join(distDir, routePath) : distDir;
+
+  // clean up legacy flat html files or outdated directories from previous builds
   await rm(path.join(distDir, `${name}.html`), { force: true }).catch(() => {});
+  if (name !== 'index') {
+    await rm(path.join(distDir, name), { recursive: true, force: true }).catch(() => {});
+  }
+  if (targetDir !== distDir) {
+    await rm(targetDir, { recursive: true, force: true }).catch(() => {});
+  }
 
   const mod = await vite.ssrLoadModule(url);
   const Component = mod.default;
@@ -382,9 +391,8 @@ for (const [name, { url, title, description, path: pagePath }] of Object.entries
     `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n</head>`
   );
 
-  const pageDir = name === 'index' ? distDir : path.join(distDir, name);
-  await mkdir(pageDir, { recursive: true });
-  await writeFile(path.join(pageDir, 'index.html'), htmlWithLd, 'utf8');
+  await mkdir(targetDir, { recursive: true });
+  await writeFile(path.join(targetDir, 'index.html'), htmlWithLd, 'utf8');
 }
 
 await vite.close();
