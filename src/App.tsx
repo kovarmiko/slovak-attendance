@@ -29,7 +29,7 @@ function App() {
       <Header open={open} onMenuClick={() => setOpen((o) => !o)} />
       <div className='content flex pb-8'>
         <Sidebar isOpen={open} />
-        <div className='p-6 mt-6 flex-1 pt-16 md:pt-0'>
+        <div className='p-6 mt-6 flex-1 pt-8 md:pt-4'>
           <Routes>
             <Route path='/' element={<About />} />
             <Route path='/about' element={<Navigate to='/' replace />} />

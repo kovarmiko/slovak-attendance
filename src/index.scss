@@ -1,5 +1,28 @@
 @use './print';
 
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --font-heading: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system;
+  --font-body: 'Manrope', ui-sans-serif, system-ui, -apple-system;
+}
+
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at top right, #ede9fe 0%, transparent 45%),
+    radial-gradient(circle at bottom left, #dbeafe 0%, transparent 40%),
+    #f7f9fc;
+  color: #0f172a;
+}
+
+.font-heading {
+  font-family: var(--font-heading);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}

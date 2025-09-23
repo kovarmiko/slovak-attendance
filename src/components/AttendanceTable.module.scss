@@ -1,42 +1,74 @@
 .table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 10px;
-
-  th,
-  td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
-    text-align: center;
-  }
-
-  th {
-    background: #f0f0f0;
-  }
-
-  tr > td:first-child {
-    background: #ffff99;
-  }
+  border-collapse: separate;
+  border-spacing: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(241, 245, 249, 0.86));
+  border-radius: 28px;
+  overflow: hidden;
+  box-shadow: 0 30px 60px rgba(15, 23, 42, 0.12);
+  backdrop-filter: blur(16px);
 }
 
-.dayName {
-  background: #ffff99;
+.table thead th {
+  font-family: var(--font-heading, 'Plus Jakarta Sans', ui-sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0f172a;
+  padding: 14px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  background: linear-gradient(135deg, rgba(125, 211, 252, 0.18), rgba(59, 130, 246, 0.18));
+  border-bottom: 1px solid rgba(148, 163, 184, 0.35);
 }
 
+.table tbody td {
+  padding: 10px 14px;
+  text-align: center;
+  font-size: 0.9rem;
+  color: #1e293b;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.22);
+  background-color: transparent;
+}
+
+
+
+.table tbody tr:nth-of-type(even) td {
+  background-color: rgba(248, 250, 252, 0.55);
+}
+
+.table tbody tr td:first-child {
+  font-weight: 600;
+  color: #0f172a;
+  text-align: left;
+  background: rgba(226, 232, 240, 0.55);
+}
+
+.dayName td,
 .weekend td {
-  background: #ffff99;
+  background: rgba(165, 243, 252, 0.4);
+  color: #0369a1;
+  font-weight: 600;
 }
 
-@media (max-width: 600px) {
-  .table {
-    display: block;
-    overflow-x: auto;
+.vacation {
+  width: 90px;
+}
 
-    th,
-    td {
-      font-size: 14px;
-      padding: 4px;
-    }
+.table input[type='time'],
+.table select {
+  font-size: 0.9rem;
+  line-height: 1.2;
+}
+
+@media (max-width: 768px) {
+  .table {
+    min-width: 720px;
+    font-size: 0.9rem;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 10px 12px;
   }
 }
 
@@ -46,25 +78,46 @@
     margin-top: 4px !important;
     table-layout: fixed;
     width: 100% !important;
-    page-break-inside: avoid !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    backdrop-filter: none !important;
+    border-radius: 0 !important;
+    border-spacing: 0 !important;
   }
 
   th,
   td {
     padding: 2px 3px !important;
     border-width: 1px !important;
+    border-color: #4b5563 !important;
     word-break: break-word;
     max-width: 60px;
+    background: transparent !important;
+    color: #000 !important;
   }
 
   th {
     font-size: 10px !important;
+    font-weight: 600 !important;
+    background: #e5e7eb !important;
+    color: #000 !important;
   }
 
-  .dayName,
+  .dayName td,
   .weekend td,
   tr > td:first-child {
-    background: #ffff99 !important;
+    background: #f3f4f6 !important;
+    color: #000 !important;
+  }
+
+  input,
+  select {
+    padding: 0 !important;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    font-size: 10px !important;
+    text-align: center !important;
   }
 
   .vacation {

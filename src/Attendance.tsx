@@ -57,9 +57,6 @@ export default function Attendance(): JSX.Element {
   );
   const activeSet = useMemo(() => new Set<string>(activeDates), [activeDates]);
 
-  const anotherMonthButtonClass =
-    'bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded';
-
   // Prefill times when switching month/shift
   useEffect(() => {
     const timesKeys = Object.keys(times);
@@ -126,6 +123,14 @@ export default function Attendance(): JSX.Element {
   useEffect(() => {
     if (lastName) setLastNameError(false);
   }, [lastName]);
+
+  const formattedPeriod = currentDate.toLocaleDateString('sk-SK', {
+    month: 'long',
+    year: 'numeric',
+  });
+
+  const activeWorkingDays = activeDates.length;
+  const displayName = [firstName, lastName].filter(Boolean).join(' ');
 
   const handlePrint = () => {
     const isFirstNameValid = firstName.trim().length > 0;
@@ -251,27 +256,52 @@ export default function Attendance(): JSX.Element {
   }, [vacations, activeDates, times, shiftType]);
 
   return (
-    <div className={classes.attendance}>
-      <header>
-        <div className='flex items-center justify-center'>
-          <h1 className='text-3xl font-semibold tracking-tight'>Dochádzka</h1>
+    <div className={`${classes.attendance} mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8`}>
+      <section className='hidden print:block text-black print:mb-4'>
+        <h1 className='text-center text-2xl font-semibold'>Dochádzka</h1>
+        <div className='mt-5 space-y-1 text-sm'>
+          <p>
+            <span className='font-semibold'>Obdobie:</span> {formattedPeriod}
+          </p>
+          <p>
+            <span className='font-semibold'>Meno a priezvisko:</span>{' '}
+            {displayName || '________________'}
+          </p>
         </div>
-        <div className={`${classes.period} text-center print:text-left`}>
-          <label>Obdobie:</label>
-          <span>
-            {currentDate.toLocaleDateString('sk-SK', {
-              month: 'long',
-              year: 'numeric',
-            })}
-          </span>
+      </section>
+
+      <section className='relative overflow-hidden rounded-3xl border border-slate-900/25 bg-gradient-to-br from-slate-900 via-slate-800 to-sky-700 px-6 py-10 text-slate-50 shadow-2xl print:hidden'>
+        <div className='absolute left-10 top-6 h-36 w-36 rounded-full bg-sky-400/35 blur-3xl' aria-hidden='true' />
+        <div className='absolute bottom-0 right-10 h-40 w-40 rounded-full bg-indigo-400/25 blur-3xl' aria-hidden='true' />
+        <div className='relative z-10 grid gap-8 md:grid-cols-[1.7fr_minmax(0,1fr)] md:items-center'>
+          <div className='space-y-5'>
+            <span className='inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.4em] text-slate-100'>Dochádzka</span>
+            <h1 className='font-heading text-4xl font-semibold leading-tight sm:text-5xl'>Kontrolujte dochádzku s istotou a eleganciou</h1>
+            <p className='max-w-2xl text-base text-slate-200/90'>Všetky príchody, odchody aj dni mimo práce máte na jednom mieste. Sledujte priebeh mesiaca, upravujte prestávky a pripravte dokument na podpis bez zbytočných tabuliek.</p>
+            <div className='flex flex-wrap items-center gap-3 text-xs font-semibold text-slate-200/80'>
+              <span className='inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1'>
+                <span className='h-2 w-2 rounded-full bg-emerald-300' aria-hidden='true' />
+                Dáta zostávajú vo vašom prehliadači
+              </span>
+              <span className='inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1'>
+                <span className='h-2 w-2 rounded-full bg-sky-300' aria-hidden='true' />
+                Export do CSV, XLSX aj tlač
+              </span>
+            </div>
+          </div>
+          <div className='rounded-3xl border border-white/30 bg-white/15 p-6 text-slate-100 shadow-lg backdrop-blur-xl'>
+            <p className='text-xs uppercase tracking-[0.4em] text-slate-200'>Aktuálne obdobie</p>
+            <p className='mt-2 font-heading text-3xl font-semibold capitalize'>{formattedPeriod}</p>
+            <p className='mt-4 text-sm text-slate-200/90'>
+              Aktívnych pracovných dní: <span className='font-semibold text-white'>{activeWorkingDays}</span>
+            </p>
+            <p className='text-sm text-slate-200/75'>Režim: {shiftType === 'regular' ? 'štandardný' : 'skrátený'}</p>
+          </div>
         </div>
-      </header>
-      <Controls
-        setCurrentDate={setCurrentDate}
-        shiftType={shiftType}
-        setShiftType={setShiftType}
-        buttonClass={anotherMonthButtonClass}
-      />
+      </section>
+
+      <Controls setCurrentDate={setCurrentDate} shiftType={shiftType} setShiftType={setShiftType} />
+
       <UserInfo
         firstName={firstName}
         lastName={lastName}
@@ -280,40 +310,54 @@ export default function Attendance(): JSX.Element {
         firstNameError={firstNameError}
         lastNameError={lastNameError}
       />
-      <div className='overflow-x-auto'>
-        <AttendanceTable
-          year={year}
-          month={month}
-          daysCount={daysCount}
-          activeSet={activeSet}
-          vacations={vacations}
-          toggleVacation={toggleVacation}
-          times={times}
-          handleTimeChange={handleTimeChange}
-          handleLunchChange={handleLunchChange}
-          shiftType={shiftType}
-          outOfOfficeOptions={outOfOfficeOptions}
-        />
-      </div>
-      <div className='flex justify-between pt-2'>
-        <div className='space-x-2 print:hidden'>
+
+      <section className='rounded-[32px] border border-slate-200/70 bg-white/80 p-6 shadow-2xl backdrop-blur-xl print:mx-0 print:mt-6 print:border-0 print:bg-transparent print:p-0 print:shadow-none print:backdrop-blur-none md:p-8'>
+        <div className='flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between'>
+          <div className='print:hidden'>
+            <h2 className='font-heading text-2xl font-semibold text-slate-900'>Mesačný prehľad</h2>
+            <p className='text-sm text-slate-500'>Úpravy sa ukladajú priebežne, bez nutnosti registrácie.</p>
+          </div>
+          <div className='flex items-center gap-2 text-xs text-slate-500 print:hidden'>
+            <span className='inline-flex h-2 w-2 rounded-full bg-emerald-400' aria-hidden='true' />
+            Kliknutím do buniek priamo meníte časy alebo prestávky.
+          </div>
+        </div>
+        <div className='mt-6 overflow-x-auto'>
+          <AttendanceTable
+            year={year}
+            month={month}
+            daysCount={daysCount}
+            activeSet={activeSet}
+            vacations={vacations}
+            toggleVacation={toggleVacation}
+            times={times}
+            handleTimeChange={handleTimeChange}
+            handleLunchChange={handleLunchChange}
+            shiftType={shiftType}
+            outOfOfficeOptions={outOfOfficeOptions}
+          />
+        </div>
+      </section>
+
+      <div className='flex flex-col gap-6 md:flex-row md:items-center md:justify-between print:mt-4 print:flex print:flex-col print:items-start print:gap-2'>
+        <div className='flex flex-wrap gap-3 print:hidden'>
           <button
             onClick={handlePrint}
-            className='bg-green-500 hover:bg-green-600 text-white font-medium py-0 px-2 rounded'
+            className='inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-emerald-400 via-emerald-500 to-emerald-600 px-6 py-3 text-sm font-semibold text-white shadow-lg transition hover:shadow-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-300'
           >
             Tlačiť
           </button>
           <button
             onClick={handleDownloadCSV}
-            className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-0 px-2 rounded'
+            className='inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-sky-200 hover:text-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200'
           >
-            Download CSV
+            Stiahnuť CSV
           </button>
           <button
             onClick={handleDownloadExcel}
-            className='bg-blue-500 hover:bg-blue-600 text-white font-medium py-0 px-2 rounded'
+            className='inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-sky-200 hover:text-sky-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-200'
           >
-            Download Excel
+            Stiahnuť Excel
           </button>
         </div>
         <SummaryDisplay summary={summary} shiftType={shiftType} />
