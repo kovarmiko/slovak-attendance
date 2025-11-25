@@ -109,7 +109,7 @@ export function getHolidays(year: number): string[] {
     toISO(year, 9, 1), // Deň Ústavy SR
     toISO(year, 9, 15), // Sedembolestná Panna Mária
     toISO(year, 11, 1), // Sviatok všetkých svätých
-    toISO(year, 11, 17), // Deň boja za slobodu a demokraciu
+    // toISO(year, 11, 17), // Deň boja za slobodu a demokraciu
     toISO(year, 12, 24), // Štedrý deň
     toISO(year, 12, 25), // Prvý sviatok vianočný
     toISO(year, 12, 26), // Druhý sviatok vianočný
