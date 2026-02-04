@@ -3,7 +3,26 @@
 
   @media print {
     margin-top: 8px !important;
-    font-size: 11px !important;
+    font-size: 12px !important;
     gap: 4px !important;
   }
+}
+
+.printSummary {
+  display: none;
+
+  @media print {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+}
+
+.printRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
 }

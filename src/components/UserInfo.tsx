@@ -2,6 +2,8 @@ import { UserRound } from 'lucide-react';
 import classes from './UserInfo.module.scss';
 
 interface Props {
+  companyName: string;
+  setCompanyName: (v: string) => void;
   firstName: string;
   lastName: string;
   setFirstName: (v: string) => void;
@@ -11,6 +13,8 @@ interface Props {
 }
 
 export default function UserInfo({
+  companyName,
+  setCompanyName,
   firstName,
   lastName,
   setFirstName,
@@ -36,6 +40,18 @@ export default function UserInfo({
       </div>
 
       <div className='flex flex-col gap-4 print:hidden md:flex-row md:items-end'>
+        <label className='flex-1 text-sm text-slate-600' htmlFor='companyName'>
+          <span className='mb-2 block text-xs uppercase tracking-[0.4em] text-slate-500'>Spoločnosť</span>
+          <input
+            id='companyName'
+            className='w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-base font-medium text-slate-800 shadow-sm transition focus:border-sky-300 focus:outline-none focus:ring-2 focus:ring-sky-100'
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            placeholder='Zadajte názov spoločnosti'
+            autoComplete='organization'
+          />
+          <p className='mt-2 text-xs font-medium text-rose-500 opacity-0'>Povinné pole</p>
+        </label>
         <label className='flex-1 text-sm text-slate-600' htmlFor='firstName'>
           <span className='mb-2 block text-xs uppercase tracking-[0.4em] text-slate-500'>Krstné meno</span>
           <input

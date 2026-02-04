@@ -28,6 +28,26 @@ interface Props {
 
 const formatDM = (date: Date) => `${date.getDate()}.${date.getMonth() + 1}.`;
 
+const formatWorkedHours = (
+  rec: TimeRecord | undefined,
+  shiftType: ShiftType,
+) => {
+  if (!rec?.in || !rec?.out) return '';
+  const [inH, inM] = rec.in.split(':').map(Number);
+  const [outH, outM] = rec.out.split(':').map(Number);
+  if (Number.isNaN(inH) || Number.isNaN(inM) || Number.isNaN(outH) || Number.isNaN(outM)) {
+    return '';
+  }
+  let totalMinutes = outH * 60 + outM - (inH * 60 + inM);
+  if (shiftType === 'regular') {
+    totalMinutes -= rec.lunchMinutes ?? 40;
+  }
+  if (totalMinutes <= 0) return '';
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${hours}:${String(minutes).padStart(2, '0')}`;
+};
+
 export default function AttendanceTable({
   year,
   month,
@@ -45,13 +65,14 @@ export default function AttendanceTable({
     <table className={`${classes.table} text-sm text-slate-700`}>
       <thead>
         <tr>
-          <th>Deň</th>
-          <th>Dátum</th>
+          <th className={classes.dayColumn}>Deň</th>
+          <th className={classes.dateColumn}>Dátum</th>
           <th className={classes.vacation}>Mimo práce</th>
           <th>Príchod</th>
           <th>Odchod</th>
           <th>Obed Odchod</th>
           <th>Obed Príchod</th>
+          <th className={classes.workedHours}>Odpracované hodiny</th>
         </tr>
       </thead>
       <tbody>
@@ -67,20 +88,24 @@ export default function AttendanceTable({
           if (isWeekend)
             return (
               <tr key={iso} className={classes.weekend}>
-                <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                <td>{dateDM}</td>
+                <td className={classes.dayColumn}>
+                  {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
+                </td>
+                <td className={classes.dateColumn}>{dateDM}</td>
                 <td className={classes.vacation}></td>
-                <td colSpan={4}></td>
+                <td colSpan={5}></td>
               </tr>
             );
 
           if (isHoliday)
             return (
               <tr key={iso} className={classes.dayName}>
-                <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-                <td>{dateDM}</td>
+                <td className={classes.dayColumn}>
+                  {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
+                </td>
+                <td className={classes.dateColumn}>{dateDM}</td>
                 <td className={classes.vacation}></td>
-                <td colSpan={4}>Štátny sviatok</td>
+                <td colSpan={5}>Štátny sviatok</td>
               </tr>
             );
 
@@ -90,8 +115,10 @@ export default function AttendanceTable({
 
           return (
             <tr key={iso}>
-              <td>{dt.toLocaleDateString('sk-SK', { weekday: 'long' })}</td>
-              <td>{dateDM}</td>
+              <td className={classes.dayColumn}>
+                {dt.toLocaleDateString('sk-SK', { weekday: 'long' })}
+              </td>
+              <td className={classes.dateColumn}>{dateDM}</td>
               <td className={classes.vacation}>
                 <input
                   type='checkbox'
@@ -151,9 +178,12 @@ export default function AttendanceTable({
                       <td></td>
                     </>
                   )}
+                  <td className={classes.workedHours}>
+                    {formatWorkedHours(rec, shiftType)}
+                  </td>
                 </>
               ) : (
-                <td colSpan={4}>
+                <td colSpan={5}>
                   <select
                     onChange={(e) =>
                       toggleVacation(

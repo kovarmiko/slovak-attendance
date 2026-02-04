@@ -11,6 +11,7 @@ export default function Attendance(): JSX.Element {
   // State
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const [shiftType, setShiftType] = useState<ShiftType>('regular');
+  const [companyName, setCompanyName] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const [firstNameError, setFirstNameError] = useState<boolean>(false);
@@ -18,6 +19,7 @@ export default function Attendance(): JSX.Element {
   const [vacations, setVacations] = useState<Set<VacationType>>(new Set());
   const [times, setTimes] = useState<Record<string, TimeRecord>>({});
   const [summary, setSummary] = useState<Summary>({ ...defaultSummary });
+  const [doctorVisits, setDoctorVisits] = useState<number>(0);
 
   // Helpers
   const daysInMonth = (year: number, month: number): number =>
@@ -131,6 +133,10 @@ export default function Attendance(): JSX.Element {
 
   const activeWorkingDays = activeDates.length;
   const displayName = [firstName, lastName].filter(Boolean).join(' ');
+  const monthKey = `${year}-${String(month + 1).padStart(2, '0')}`;
+  const holidaysCount = getHolidays(year).filter((iso) =>
+    iso.startsWith(monthKey)
+  ).length;
 
   const handlePrint = () => {
     const isFirstNameValid = firstName.trim().length > 0;
@@ -148,6 +154,23 @@ export default function Attendance(): JSX.Element {
   };
 
   const buildExportData = () => {
+    const formatWorkedHours = (rec: TimeRecord | undefined) => {
+      if (!rec?.in || !rec?.out) return '';
+      const [inH, inM] = rec.in.split(':').map(Number);
+      const [outH, outM] = rec.out.split(':').map(Number);
+      if (Number.isNaN(inH) || Number.isNaN(inM) || Number.isNaN(outH) || Number.isNaN(outM)) {
+        return '';
+      }
+      let totalMinutes = outH * 60 + outM - (inH * 60 + inM);
+      if (shiftType === 'regular') {
+        totalMinutes -= rec.lunchMinutes ?? 40;
+      }
+      if (totalMinutes <= 0) return '';
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      return `${hours}:${String(minutes).padStart(2, '0')}`;
+    };
+
     const header = [
       'Deň',
       'Dátum',
@@ -156,6 +179,7 @@ export default function Attendance(): JSX.Element {
       'Odchod',
       'Obed Odchod',
       'Obed Príchod',
+      'Odpracované hodiny',
     ];
     const rows: string[][] = [];
 
@@ -172,11 +196,11 @@ export default function Attendance(): JSX.Element {
       const dateDM = `${d}.${month + 1}.`;
 
       if (isWeekend) {
-        rows.push([dayName, dateDM, '', '', '', '', '']);
+        rows.push([dayName, dateDM, '', '', '', '', '', '']);
         continue;
       }
       if (isHoliday) {
-        rows.push([dayName, dateDM, '', 'Štátny sviatok', '', '', '']);
+        rows.push([dayName, dateDM, '', 'Štátny sviatok', '', '', '', '']);
         continue;
       }
 
@@ -188,7 +212,7 @@ export default function Attendance(): JSX.Element {
           outOfOfficeOptions
             .flatMap((o) => Object.entries(o))
             .find(([k]) => k === vacation.value)?.[1] || '';
-        rows.push([dayName, dateDM, label as string, '', '', '', '']);
+        rows.push([dayName, dateDM, label as string, '', '', '', '', '']);
       } else {
         rows.push([
           dayName,
@@ -200,6 +224,7 @@ export default function Attendance(): JSX.Element {
           shiftType === 'regular'
             ? `${String(12 + Math.floor((rec.lunchMinutes ?? 40) / 60)).padStart(2, '0')}:${String((rec.lunchMinutes ?? 40) % 60).padStart(2, '0')}`
             : '',
+          formatWorkedHours(rec),
         ]);
       }
     }
@@ -236,30 +261,35 @@ export default function Attendance(): JSX.Element {
     const summaryHolder: Summary = { ...defaultSummary };
     summaryHolder.workedDays = activeDates.length - vacations.size;
 
-    if (shiftType === 'shortened') {
-      let totalHours = 0;
-      activeDates.forEach((iso) => {
-        const isVacation = Array.from(vacations).some((v) => v.key === iso);
-        if (isVacation) return;
-        const rec = times[iso];
-        if (!rec?.in || !rec?.out) return;
-        const [inH, inM] = rec.in.split(':').map(Number);
-        const [outH, outM] = rec.out.split(':').map(Number);
-        const diff = outH * 60 + outM - (inH * 60 + inM);
-        totalHours += diff / 60;
-      });
-      summaryHolder.workedHours = Math.round(totalHours * 100) / 100;
-    }
+    let totalHours = 0;
+    activeDates.forEach((iso) => {
+      const isVacation = Array.from(vacations).some((v) => v.key === iso);
+      if (isVacation) return;
+      const rec = times[iso];
+      if (!rec?.in || !rec?.out) return;
+      const [inH, inM] = rec.in.split(':').map(Number);
+      const [outH, outM] = rec.out.split(':').map(Number);
+      let diff = outH * 60 + outM - (inH * 60 + inM);
+      if (shiftType === 'regular') diff -= rec.lunchMinutes ?? 40;
+      totalHours += diff / 60;
+    });
+    summaryHolder.workedHours = Math.round(totalHours * 100) / 100;
 
     Array.from(vacations).forEach(({ value }) => (summaryHolder[value] += 1));
     setSummary(summaryHolder);
   }, [vacations, activeDates, times, shiftType]);
 
   return (
-    <div className={`${classes.attendance} mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8`}>
+    <div
+      className={`${classes.attendance} mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 print:px-0`}
+    >
       <section className='hidden print:block text-black print:mb-4'>
         <h1 className='text-center text-2xl font-semibold'>Dochádzka</h1>
         <div className='mt-5 space-y-1 text-sm'>
+          <p>
+            <span className='font-semibold'>Spoločnosť:</span>{' '}
+            {companyName || '________________'}
+          </p>
           <p>
             <span className='font-semibold'>Obdobie:</span> {formattedPeriod}
           </p>
@@ -303,6 +333,8 @@ export default function Attendance(): JSX.Element {
       <Controls setCurrentDate={setCurrentDate} shiftType={shiftType} setShiftType={setShiftType} />
 
       <UserInfo
+        companyName={companyName}
+        setCompanyName={setCompanyName}
         firstName={firstName}
         lastName={lastName}
         setFirstName={setFirstName}
@@ -322,7 +354,7 @@ export default function Attendance(): JSX.Element {
             Kliknutím do buniek priamo meníte časy alebo prestávky.
           </div>
         </div>
-        <div className='mt-6 overflow-x-auto'>
+        <div className='mt-6 overflow-x-auto print:overflow-visible'>
           <AttendanceTable
             year={year}
             month={month}
@@ -360,7 +392,12 @@ export default function Attendance(): JSX.Element {
             Stiahnuť Excel
           </button>
         </div>
-        <SummaryDisplay summary={summary} shiftType={shiftType} />
+        <SummaryDisplay
+          summary={summary}
+          holidaysCount={holidaysCount}
+          doctorVisits={doctorVisits}
+          setDoctorVisits={setDoctorVisits}
+        />
       </div>
     </div>
   );

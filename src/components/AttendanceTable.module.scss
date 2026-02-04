@@ -39,8 +39,22 @@
 .table tbody tr td:first-child {
   font-weight: 600;
   color: #0f172a;
-  text-align: left;
+  // text-align: left;
   background: rgba(226, 232, 240, 0.55);
+}
+
+.dayColumn {
+  font-weight: 600;
+  max-width: 200px;
+}
+
+.dateColumn {
+  white-space: nowrap;
+}
+
+.workedHours {
+  font-weight: 600;
+  color: #0f172a;
 }
 
 .dayName td,
@@ -87,17 +101,38 @@
 
   th,
   td {
-    padding: 2px 3px !important;
+    padding: 1px 2px !important;
     border-width: 1px !important;
     border-color: #4b5563 !important;
     word-break: break-word;
-    max-width: 60px;
+    max-width: 56px;
     background: transparent !important;
     color: #000 !important;
   }
 
   th {
-    font-size: 10px !important;
+    padding: 0.5px 1px !important;
+    font-size: 9px !important;
+    letter-spacing: 0.03em !important;
+  }
+
+  .dayColumn,
+  .dateColumn {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .dateColumn {
+    // width: 46px !important;
+  }
+
+  .workedHours {
+    // width: 52px !important;
+    // max-width: 52px !important;
+  }
+
+  th {
+    font-size: 9px !important;
     font-weight: 600 !important;
     background: #e5e7eb !important;
     color: #000 !important;
@@ -108,6 +143,9 @@
   tr > td:first-child {
     background: #f3f4f6 !important;
     color: #000 !important;
+  }
+  tr:nth-child(2n + 1) > td:not(:first-child) {
+    background: yellow;
   }
 
   input,
