@@ -1,5 +1,4 @@
 import React from 'react';
-import AdUnit from '../components/AdUnit';
 
 export default function PartTimeAndAgreements(): JSX.Element {
   return (
@@ -33,7 +32,6 @@ export default function PartTimeAndAgreements(): JSX.Element {
           overte aj dovolenky a sviatky.
         </p>
       </section>
-      <AdUnit />
     </article>
   );
 }

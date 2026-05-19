@@ -1,5 +1,4 @@
 import React from 'react';
-import AdUnit from '../components/AdUnit';
 
 export default function PnOcrDoctor(): JSX.Element {
   return (
@@ -36,7 +35,6 @@ export default function PnOcrDoctor(): JSX.Element {
           <li>nesprávny počet dní v súhrne (zabudnuté sviatky alebo víkendy).</li>
         </ul>
       </section>
-      <AdUnit />
     </article>
   );
 }

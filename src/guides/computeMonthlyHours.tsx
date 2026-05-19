@@ -1,5 +1,4 @@
 import React from 'react';
-import AdUnit from '../components/AdUnit';
 
 export default function ComputeMonthlyHours(): JSX.Element {
   return (
@@ -52,7 +51,6 @@ export default function ComputeMonthlyHours(): JSX.Element {
           <li>porovnajte sumár odpracovaných dní/hodín s dohodou.</li>
         </ul>
       </section>
-      <AdUnit />
     </article>
   );
 }

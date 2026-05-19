@@ -1,5 +1,4 @@
 import Navigation from './components/Navigation';
-import AdUnit from './components/AdUnit';
 
 export default function FAQ(): JSX.Element {
   return (
@@ -154,7 +153,6 @@ export default function FAQ(): JSX.Element {
         </p>
       </section>
       </article>
-      <AdUnit />
       <Navigation />
     </>
   );

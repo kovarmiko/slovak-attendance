@@ -28,7 +28,7 @@ export default function Privacy(): JSX.Element {
           <p className='text-gray-700'>
             Na stránke používame súbory cookie potrebné na základné fungovanie
             webu (napr. bezpečnosť, predvoľby). Na základe vášho súhlasu môžeme
-            používať aj analytické a reklamné cookies.
+            používať aj analytické cookies.
           </p>
           <ul className='list-disc list-inside text-gray-700 space-y-1'>
             <li>
@@ -38,62 +38,16 @@ export default function Privacy(): JSX.Element {
               <strong>Analytické</strong>: anonymné meranie návštevnosti (iba ak
               udelíte súhlas).
             </li>
-            <li>
-              <strong>Reklamné</strong>: zobrazenie reklám a meranie ich výkonu
-              cez Google AdSense (iba ak udelíte súhlas).
-            </li>
           </ul>
         </section>
 
         <section className='space-y-2'>
-          <h2 className='text-xl font-semibold'>Google AdSense a súhlas</h2>
+          <h2 className='text-xl font-semibold'>Analytika a súhlas</h2>
           <p className='text-gray-700'>
-            Na monetizáciu používame Google AdSense. Pred načítaním reklamného
-            skriptu vyžadujeme váš súhlas v súlade s Consent Mode v2. Štandardne
-            sú reklamné a analytické cookies nastavené na <em>odmietnuté</em>.
-            Po prijatí súhlasu sa používajú na personalizáciu reklám, meranie a
-            zlepšovanie služieb.
+            Analytické cookies používame iba po vašom súhlase a slúžia na
+            anonymné meranie návštevnosti a zlepšovanie služby. Štandardne sú
+            analytické cookies nastavené na <em>odmietnuté</em>.
           </p>
-          <p className='text-gray-700'>
-            Podrobnosti o tom, ako Google používa údaje, nájdete na stránkach
-            <a
-              className='text-blue-600 hover:underline'
-              href='https://policies.google.com/technologies/partner-sites'
-              target='_blank'
-              rel='noreferrer'
-            >
-              &nbsp;How Google uses information from sites or apps
-            </a>{' '}
-            a
-            <a
-              className='text-blue-600 hover:underline'
-              href='https://policies.google.com/technologies/ads'
-              target='_blank'
-              rel='noreferrer'
-            >
-              &nbsp;Technológie reklamy Google
-            </a>
-            .
-          </p>
-          <div className='text-gray-700'>
-            <p className='font-medium mt-2'>Reklamný partner</p>
-            <ul className='list-disc list-inside'>
-              <li>Google AdSense (Google Ireland Limited)</li>
-              <li>Správa súhlasu: Google Funding Choices (CMP, TCF v2)</li>
-            </ul>
-            <p className='text-gray-700 mt-2'>
-              Nastavenia reklám Google si môžete spravovať na adrese
-              <a
-                className='text-blue-600 hover:underline'
-                href='https://adssettings.google.com'
-                target='_blank'
-                rel='noreferrer'
-              >
-                &nbsp;adssettings.google.com
-              </a>
-              .
-            </p>
-          </div>
         </section>
 
         <section className='space-y-2'>

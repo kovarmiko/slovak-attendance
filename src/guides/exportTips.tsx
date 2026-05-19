@@ -1,5 +1,4 @@
 import React from 'react';
-import AdUnit from '../components/AdUnit';
 
 export default function ExportTips(): JSX.Element {
   return (
@@ -33,7 +32,6 @@ export default function ExportTips(): JSX.Element {
           <li>pred exportom skontrolujte, že polia neobsahujú medzery naviac.</li>
         </ul>
       </section>
-      <AdUnit />
     </article>
   );
 }

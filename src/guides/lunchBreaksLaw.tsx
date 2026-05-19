@@ -1,5 +1,4 @@
 import React from 'react';
-import AdUnit from '../components/AdUnit';
 
 export default function LunchBreaksLaw(): JSX.Element {
   return (
@@ -34,7 +33,6 @@ export default function LunchBreaksLaw(): JSX.Element {
           <li>pri skrátenom režime sa obedy neriešia.</li>
         </ul>
       </section>
-      <AdUnit />
     </article>
   );
 }

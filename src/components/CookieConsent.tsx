@@ -18,19 +18,8 @@ export default function CookieConsent() {
     return () => window.removeEventListener('openConsent', open);
   }, []);
 
-  // If a certified CMP is present, hide custom banner to avoid duplicates
-  useEffect(() => {
-    const w = window as any;
-    if (typeof w.__tcfapi === 'function') {
-      setVisible(false);
-    }
-  }, []);
-
   const acceptAll = () => {
     const next: ConsentState = {
-      ad_storage: 'granted',
-      ad_user_data: 'granted',
-      ad_personalization: 'granted',
       analytics_storage: 'granted',
     };
     saveConsent(next);
@@ -57,46 +46,13 @@ export default function CookieConsent() {
           <span className='font-medium'>Nastavenia súborov cookie</span>
           <p className='text-gray-200'>
             Používame súbory cookie na základné fungovanie webu a, s vaším
-            súhlasom, aj na analýzu a zobrazovanie reklám (Google AdSense).
-            Vaše voľby môžete kedykoľvek zmeniť v časti „Nastavenia cookies“.
+            súhlasom, aj na anonymnú analýzu návštevnosti. Vaše voľby môžete
+            kedykoľvek zmeniť v časti „Nastavenia cookies“.
           </p>
         </div>
 
         {customizing ? (
-          <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 bg-gray-800/70 p-3 rounded'>
-            <fieldset className='space-y-2'>
-              <legend className='font-medium'>Reklama</legend>
-              <label className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  checked={state.ad_storage === 'granted'}
-                  onChange={(e) =>
-                    setState((s) => ({ ...s, ad_storage: e.target.checked ? 'granted' : 'denied' }))
-                  }
-                />
-                Ukladanie pre reklamy
-              </label>
-              <label className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  checked={state.ad_user_data === 'granted'}
-                  onChange={(e) =>
-                    setState((s) => ({ ...s, ad_user_data: e.target.checked ? 'granted' : 'denied' }))
-                  }
-                />
-                Údaje používateľa pre reklamy
-              </label>
-              <label className='flex items-center gap-2'>
-                <input
-                  type='checkbox'
-                  checked={state.ad_personalization === 'granted'}
-                  onChange={(e) =>
-                    setState((s) => ({ ...s, ad_personalization: e.target.checked ? 'granted' : 'denied' }))
-                  }
-                />
-                Personalizácia reklám
-              </label>
-            </fieldset>
+          <div className='bg-gray-800/70 p-3 rounded'>
             <fieldset className='space-y-2'>
               <legend className='font-medium'>Analytika</legend>
               <label className='flex items-center gap-2'>

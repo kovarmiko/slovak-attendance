@@ -6,7 +6,6 @@ export const HOLIDAYS_2025: string[] = [
   '2025-04-18',
   '2025-04-21',
   '2025-05-01',
-  '2025-05-08',
   '2025-07-05',
   '2025-08-29',
   '2025-09-01',
@@ -24,7 +23,6 @@ export const HOLIDAYS_2026: string[] = [
   '2026-04-03', // Veľký piatok
   '2026-04-06', // Veľkonočný pondelok
   '2026-05-01',
-  '2026-05-08',
   '2026-07-05',
   '2026-08-29',
   '2026-09-01',
@@ -42,7 +40,6 @@ export const HOLIDAYS_2027: string[] = [
   '2027-03-26', // Veľký piatok
   '2027-03-29', // Veľkonočný pondelok
   '2027-05-01',
-  '2027-05-08',
   '2027-07-05',
   '2027-08-29',
   '2027-09-01',
@@ -103,7 +100,6 @@ export function getHolidays(year: number): string[] {
     toISO(year, 1, 1), // Deň vzniku SR / Nový rok
     toISO(year, 1, 6), // Zjavenie Pána (Traja králi)
     toISO(year, 5, 1), // Sviatok práce
-    toISO(year, 5, 8), // Deň víťazstva nad fašizmom
     toISO(year, 7, 5), // Sv. Cyrila a Metoda
     toISO(year, 8, 29), // Výročie SNP
     toISO(year, 9, 1), // Deň Ústavy SR
